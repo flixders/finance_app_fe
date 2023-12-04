@@ -117,7 +117,6 @@ export const TransactionPlannedFields: FormField[] = generateFormFields([
     placeholder: "",
   },
 ]);
-
 await updateFieldOptions(
   TransactionPlannedFields,
   "cashflow/transaction-payment-term-list",

@@ -4,6 +4,8 @@ import ChakraTable from "./components/ChakraTable";
 import GenericChakraForm from "./components/GenericChakraForm";
 import LogoutButton from "./components/LogoutButton";
 import { fetchDataAndUpdateState } from "./utils/apiUtils";
+import UserRegistration from "./components/UserRegistration";
+
 import {
   BankAccountFormFields,
   TransactionVariableFields,
@@ -15,7 +17,6 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
-
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
   };
@@ -75,22 +76,52 @@ function App() {
       {checkingAuth ? (
         "Even aan het landen..."
       ) : !isLoggedIn ? (
-        <Login onLoginSuccess={handleLoginSuccess} />
+        <>
+          <Tabs variant="soft-rounded" isLazy>
+            <TabList justifyContent="center" mb={4} marginTop={30}>
+              <Tab fontSize="md" px={3} py={2} mx={1}>
+                Login
+              </Tab>
+              <Tab fontSize="md" px={3} py={2} mx={1}>
+                Registreer
+              </Tab>
+            </TabList>
+
+            <TabPanels>
+              <TabPanel>
+                <Flex justify="center" width="100%">
+                  <Login
+                    onLoginSuccess={handleLoginSuccess}
+                    endpoint="auth/jwt/create"
+                  />
+                </Flex>
+              </TabPanel>
+              <TabPanel>
+                <Flex justify="center" width="100%">
+                  <UserRegistration
+                    onRegistrationSuccess={handleLoginSuccess}
+                    endpoint="/auth/users/"
+                  />
+                </Flex>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </>
       ) : (
         <>
           <LogoutButton />
           <Tabs variant="line" marginLeft={"50px"} marginRight={"150px"}>
             <TabList>
               <Tab>Bankrekening</Tab>
-              <Tab>Geplande uitgaves</Tab>
-              <Tab>Variabele uitgaves</Tab>
+              <Tab>Geplande transacties</Tab>
+              <Tab>Variabele transacties</Tab>
               <Tab>Overzicht</Tab>
             </TabList>
 
             <TabPanels>
               <TabPanel>
                 <Flex justify="center" width="100%" marginTop="20px">
-                  <Grid templateColumns="1fr 1fr" gap={4}>
+                  <Grid templateColumns="1fr 2fr" gap={4}>
                     <Box
                       border="1px solid #ccc"
                       borderRadius="15px"
@@ -112,10 +143,11 @@ function App() {
                         data={bankAccountData}
                         columnTranslations={{
                           date: "Datum",
-                          account_balance: "Vermogen",
+                          account_balance: "Bedrag",
                         }}
                         endpoint="cashflow/bank-account"
                         onFormRequest={handleBankAccountFormRequest}
+                        euroColumn="account_balance"
                       />
                     </Box>
                   </Grid>
@@ -123,7 +155,7 @@ function App() {
               </TabPanel>
               <TabPanel>
                 <Flex justify="center" width="100%" marginTop="20px">
-                  <Grid templateColumns="1fr 1fr" gap={4}>
+                  <Grid templateColumns="1fr 2fr" gap={4}>
                     <Box
                       border="1px solid #ccc"
                       borderRadius="15px"
@@ -157,6 +189,7 @@ function App() {
                         onFormRequest={
                           handlesetransactionsPlannedDataFormRequest
                         }
+                        euroColumn="amount"
                       />
                     </Box>
                   </Grid>
@@ -165,7 +198,7 @@ function App() {
 
               <TabPanel>
                 <Flex justify="center" width="100%" marginTop="20px">
-                  <Grid templateColumns="1fr 1fr" gap={4}>
+                  <Grid templateColumns="1fr 2fr" gap={4}>
                     <Box
                       border="1px solid #ccc"
                       borderRadius="15px"
@@ -197,6 +230,7 @@ function App() {
                         onFormRequest={
                           handlesetransactionsVariableDataFormRequest
                         }
+                        euroColumn="amount"
                       />
                     </Box>
                   </Grid>

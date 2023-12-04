@@ -78,7 +78,7 @@ const GenericChakraForm: React.FC<Props> = ({
       <form onSubmit={onSubmit}>
         {fields.map((field) => (
           <FormControl key={field.name} marginBottom="20px">
-            <FormLabel>{field.label}</FormLabel>
+            <FormLabel fontWeight={600}>{field.label}</FormLabel>
             {renderFormField(field)}
           </FormControl>
         ))}

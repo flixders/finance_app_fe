@@ -1,5 +1,3 @@
-// LoginForm.tsx
-
 import React, { useState } from "react";
 import {
   Flex,
@@ -11,42 +9,53 @@ import {
   Text,
   IconButton,
 } from "@chakra-ui/react";
-import { loginUser, LoginResponse } from "../utils/apiUtils";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { registerUser, RegistrationResponse } from "../utils/apiUtils";
 
-interface LoginFormProps {
-  onLoginSuccess: () => void;
+interface RegistrationFormProps {
+  onRegistrationSuccess: () => void;
   endpoint: string;
 }
-const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess, endpoint }) => {
+
+const RegistrationForm: React.FC<RegistrationFormProps> = ({
+  onRegistrationSuccess,
+  endpoint,
+}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+  const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [error, setError] = useState<string | undefined>(undefined);
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleRegistration = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { success, error: loginError }: LoginResponse = await loginUser(
-      username,
-      password,
-      endpoint
-    );
+    const { success, error: registrationError }: RegistrationResponse =
+      await registerUser(
+        username,
+        password,
+        email,
+        firstName,
+        lastName,
+        endpoint
+      );
 
     if (success) {
-      onLoginSuccess();
+      onRegistrationSuccess();
     } else {
-      setError(loginError);
+      setError(registrationError);
     }
   };
 
   return (
     <Flex>
       <Box width="400px" p={8} borderWidth={1} borderRadius={8} boxShadow="lg">
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleRegistration}>
           <FormControl>
             <FormLabel htmlFor="username">Gebruikersnaam</FormLabel>
             <Input
@@ -75,8 +84,35 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess, endpoint }) => {
               />
             </Flex>
           </FormControl>
+          <FormControl mt={4}>
+            <FormLabel htmlFor="email">Email</FormLabel>
+            <Input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </FormControl>
+          <FormControl mt={4}>
+            <FormLabel htmlFor="firstName">Naam</FormLabel>
+            <Input
+              type="text"
+              id="firstName"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </FormControl>
+          <FormControl mt={4}>
+            <FormLabel htmlFor="lastName">Achternaam</FormLabel>
+            <Input
+              type="text"
+              id="lastName"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+          </FormControl>
           <Button colorScheme="blue" mt={6} type="submit" width="100%">
-            Login
+            Registreer en log in
           </Button>
         </form>
         {error && (
@@ -89,4 +125,4 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess, endpoint }) => {
   );
 };
 
-export default LoginForm;
+export default RegistrationForm;

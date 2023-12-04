@@ -1,18 +1,5 @@
 import { FormField } from "../utils/formFields";
-const API_BASE_URL = "http://127.0.0.1:8000/"; // Your base URL
-
-export async function fetchCategories(): Promise<
-  { value: string; label: string }[]
-> {
-  try {
-    const response = await fetch("your_categories_endpoint_here");
-    const categories = await response.json();
-    return categories;
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-    return [];
-  }
-}
+const API_BASE_URL = "http://127.0.0.1:8000/";
 
 export async function fetchData(endpoint: string) {
   const url = `${API_BASE_URL}/${endpoint}`;
@@ -140,3 +127,105 @@ export async function updateFieldOptions(
 
   return fields;
 }
+
+// apiUtils.ts
+export interface LoginResponse {
+  success: boolean;
+  error?: string;
+}
+export const loginUser = async (
+  username: string,
+  password: string,
+  endpoint: string
+): Promise<LoginResponse> => {
+  // auth/jwt/create
+  const url = `${API_BASE_URL}/${endpoint}`;
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const jwt = data.access;
+      localStorage.setItem("jwt", jwt);
+      return { success: true };
+    } else {
+      return {
+        success: false,
+        error: "Invalid credentials. Please try again.",
+      };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      error: "An error occurred while logging in. Please try again later.",
+    };
+  }
+};
+
+export interface RegistrationResponse {
+  success: boolean;
+  error?: string;
+}
+
+export const registerUser = async (
+  username: string,
+  password: string,
+  email: string,
+  firstName: string,
+  lastName: string,
+  endpoint: string
+): Promise<RegistrationResponse> => {
+  try {
+    const url = `${API_BASE_URL}${endpoint}`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username,
+        password,
+        email,
+        first_name: firstName,
+        last_name: lastName,
+      }),
+    });
+    console.log(
+      JSON.stringify({
+        username,
+        password,
+        email,
+        first_name: firstName,
+        last_name: lastName,
+      })
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      const jwt = data.access;
+      localStorage.setItem("jwt", jwt);
+      return { success: true };
+    } else {
+      const data = await response.json();
+      if (data && data.detail) {
+        return { success: false, error: data.detail };
+      } else {
+        return {
+          success: false,
+          error: "Registration failed. Please try again.",
+        };
+      }
+    }
+  } catch (error) {
+    return {
+      success: false,
+      error: "An error occurred. Please try again later.",
+    };
+  }
+};
