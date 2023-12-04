@@ -1,4 +1,18 @@
+import { FormField } from "../utils/formFields";
 const API_BASE_URL = "http://127.0.0.1:8000/"; // Your base URL
+
+export async function fetchCategories(): Promise<
+  { value: string; label: string }[]
+> {
+  try {
+    const response = await fetch("your_categories_endpoint_here");
+    const categories = await response.json();
+    return categories;
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return [];
+  }
+}
 
 export async function fetchData(endpoint: string) {
   const url = `${API_BASE_URL}/${endpoint}`;
@@ -96,3 +110,33 @@ export const deleteRecord = async (
     throw error;
   }
 };
+
+interface Identifier {
+  id: string;
+  label: string;
+}
+export async function updateFieldOptions(
+  fields: FormField[],
+  endpoint: string,
+  fieldName: string,
+  idIdentifier: string,
+  labelIdentifier: string
+): Promise<FormField[]> {
+  try {
+    const data: Identifier[] = await fetchData(endpoint);
+
+    const fieldToUpdate = fields.find((field) => field.name === fieldName);
+    if (fieldToUpdate && fieldToUpdate.inputType === "select" && data) {
+      fieldToUpdate.selectOptions = data.map((item: Identifier) => ({
+        value: item[idIdentifier as keyof Identifier],
+        label: item[labelIdentifier as keyof Identifier],
+      }));
+    } else {
+      console.error(`Field '${fieldName}' not found or not a select input.`);
+    }
+  } catch (error) {
+    console.error("Error updating field options:", error);
+  }
+
+  return fields;
+}

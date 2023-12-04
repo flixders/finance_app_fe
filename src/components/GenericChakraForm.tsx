@@ -1,32 +1,32 @@
 import React, { useState, ChangeEvent } from "react";
-import { FormField } from "../utils/generateFormFields";
 import { submitFormData } from "../utils/apiUtils";
+import { FormField } from "../utils/formFields";
 
 import {
   Input,
   Button,
   FormControl,
   FormLabel,
+  Select,
   HStack,
-  Box,
-  Text,
 } from "@chakra-ui/react";
 
 interface Props {
-  form_title: string;
   fields: FormField[];
   endpoint: string;
   onFormRequest: () => void;
 }
 
 const GenericChakraForm: React.FC<Props> = ({
-  form_title,
   fields,
   endpoint,
   onFormRequest,
 }) => {
-  const [formData, setFormData] = useState<any>({});
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const [formData, setFormData] = useState<{ [key: string]: string }>({});
+
+  const handleChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -43,24 +43,43 @@ const GenericChakraForm: React.FC<Props> = ({
     }
   };
 
+  const renderFormField = (field: FormField) => {
+    if (field.inputType === "input") {
+      return (
+        <Input
+          type={field.inputElementType}
+          name={field.name}
+          value={formData[field.name] || ""}
+          onChange={handleChange}
+          placeholder={field.placeholder}
+        />
+      );
+    } else if (field.inputType === "select") {
+      return (
+        <Select
+          name={field.name}
+          value={formData[field.name] || ""}
+          onChange={handleChange}
+          placeholder={field.placeholder}
+        >
+          {field.selectOptions?.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
+      );
+    }
+    return null;
+  };
+
   return (
     <>
-      <Box mb={4}>
-        <Text as="h1" fontSize="2xl" fontWeight="bold" color="grey.100">
-          {form_title}
-        </Text>
-      </Box>
       <form onSubmit={onSubmit}>
         {fields.map((field) => (
           <FormControl key={field.name} marginBottom="20px">
             <FormLabel>{field.label}</FormLabel>
-            <Input
-              type={field.type}
-              name={field.name}
-              value={formData[field.name] || ""}
-              onChange={handleChange}
-              placeholder={field.placeholder}
-            />
+            {renderFormField(field)}
           </FormControl>
         ))}
         <HStack spacing={4} mt={4}>

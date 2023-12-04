@@ -78,7 +78,7 @@ const ChakraTable: React.FC<Props> = ({
     displayPages = pageNumbers.slice(totalPages - maxButtonsToShow, totalPages);
   }
 
-  const columnsToShow = Object.keys(data[0]).filter((key) => key !== "id");
+  const columnsToShow = Object.keys(columnTranslations);
 
   return (
     <div>

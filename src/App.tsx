@@ -2,8 +2,13 @@ import { useState, useEffect } from "react";
 import Login from "./components/Login";
 import ChakraTable from "./components/ChakraTable";
 import GenericChakraForm from "./components/GenericChakraForm";
+import LogoutButton from "./components/LogoutButton";
 import { fetchDataAndUpdateState } from "./utils/apiUtils";
-import { FormField, generateFormFields } from "./utils/generateFormFields";
+import {
+  BankAccountFormFields,
+  TransactionVariableFields,
+  TransactionPlannedFields,
+} from "./utils/formFields";
 import { Box, Flex, Grid } from "@chakra-ui/react";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 
@@ -25,63 +30,35 @@ function App() {
   useEffect(() => {
     if (isLoggedIn) {
       fetchDataAndUpdateState("cashflow/bank-account", setbankAccountData);
+      fetchDataAndUpdateState(
+        "cashflow/transaction-variable/",
+        setransactionsVariableData
+      );
+      fetchDataAndUpdateState(
+        "cashflow/transaction-planned/",
+        setransactionsPlannedData
+      );
     }
   }, [isLoggedIn]);
 
-  //logic to update bankaccount table
-  const BankAccountFormFields: FormField[] = generateFormFields([
-    {
-      name: "date",
-      type: "date",
-      label: "Datum",
-      placeholder: "Datum van bedrag op bankrekening",
-    },
-    {
-      name: "account_balance",
-      type: "numeric",
-      label: "Bedrag",
-      placeholder: "Beschikbaar vermogen",
-    },
-  ]);
+  //BANKREKENING
   const [bankAccountData, setbankAccountData] = useState<any[]>([]);
   const handleBankAccountFormRequest = () => {
     fetchDataAndUpdateState("cashflow/bank-account", setbankAccountData);
   };
 
-  // VARIABELE LASTEN
-  const TransactionVariableFields: FormField[] = generateFormFields([
-    {
-      name: "amount",
-      type: "numeric",
-      label: "Bedrag",
-      placeholder: "Bedrag van aankoop",
-    },
-    {
-      name: "date",
-      type: "date",
-      label: "Datum",
-      placeholder: "Datum van aankoop",
-    },
-    {
-      name: "category",
-      type: "numeric",
-      label: "Categorie",
-      placeholder: "Categorie van aankoop",
-    },
-    {
-      name: "description",
-      type: "text",
-      label: "Beschrijving",
-      placeholder: "Beschrijving van aankoop",
-    },
-    {
-      name: "transaction_type",
-      type: "numeric",
-      label: "Type aankoop",
-      placeholder: "Welk type was je aankoop?",
-    },
-  ]);
+  // VASTE LASTEN
+  const [transactionsPlannedData, setransactionsPlannedData] = useState<any[]>(
+    []
+  );
+  const handlesetransactionsPlannedDataFormRequest = () => {
+    fetchDataAndUpdateState(
+      "cashflow/transaction-planned/",
+      setransactionsPlannedData
+    );
+  };
 
+  // VARIABELE LASTEN
   const [transactionsVariableData, setransactionsVariableData] = useState<
     any[]
   >([]);
@@ -101,17 +78,18 @@ function App() {
         <Login onLoginSuccess={handleLoginSuccess} />
       ) : (
         <>
-          <Tabs variant="line" marginLeft={"20px"} marginRight={"20px"}>
+          <LogoutButton />
+          <Tabs variant="line" marginLeft={"50px"} marginRight={"150px"}>
             <TabList>
               <Tab>Bankrekening</Tab>
-              <Tab>Vaste lasten</Tab>
-              <Tab>Variabelen uitgaven</Tab>
+              <Tab>Geplande uitgaves</Tab>
+              <Tab>Variabele uitgaves</Tab>
               <Tab>Overzicht</Tab>
             </TabList>
 
             <TabPanels>
               <TabPanel>
-                <Flex justify="center" width="100%" marginTop="50px">
+                <Flex justify="center" width="100%" marginTop="20px">
                   <Grid templateColumns="1fr 1fr" gap={4}>
                     <Box
                       border="1px solid #ccc"
@@ -119,7 +97,6 @@ function App() {
                       padding="20px"
                     >
                       <GenericChakraForm
-                        form_title="Beschikbaar vermogen"
                         fields={BankAccountFormFields}
                         endpoint="cashflow/bank-account"
                         onFormRequest={handleBankAccountFormRequest}
@@ -144,13 +121,8 @@ function App() {
                   </Grid>
                 </Flex>
               </TabPanel>
-
-              {/* Second Tab Panel */}
-              <TabPanel></TabPanel>
-
-              {/* Third Tab Panel */}
               <TabPanel>
-                <Flex justify="center" width="100%" marginTop="50px">
+                <Flex justify="center" width="100%" marginTop="20px">
                   <Grid templateColumns="1fr 1fr" gap={4}>
                     <Box
                       border="1px solid #ccc"
@@ -158,10 +130,11 @@ function App() {
                       padding="20px"
                     >
                       <GenericChakraForm
-                        form_title="Variabele uitgaves"
-                        fields={TransactionVariableFields}
-                        endpoint="cashflow/transaction-variable/"
-                        onFormRequest={handleBankAccountFormRequest}
+                        fields={TransactionPlannedFields}
+                        endpoint="cashflow/transaction-planned"
+                        onFormRequest={
+                          handlesetransactionsPlannedDataFormRequest
+                        }
                       />
                     </Box>
                     {/* Second column */}
@@ -170,12 +143,61 @@ function App() {
                       borderRadius="15px"
                       padding="20px"
                     >
-                      {/* <ChakraTable
-                        data={}
-                        columnTranslations={{}}
-                        endpoint="cashflow/bank-account"
-                        onFormRequest={handleBankAccountFormRequest}
-                      /> */}
+                      <ChakraTable
+                        data={transactionsPlannedData}
+                        columnTranslations={{
+                          amount: "Bedrag",
+                          payment_term_name_dutch: "Termijn",
+                          date_valid_from: "Datum vanaf",
+                          date_valid_up_including: "Datum tot en met",
+                          category_name: "Categorie",
+                          description: "Beschrijving",
+                        }}
+                        endpoint="cashflow/transaction-planned"
+                        onFormRequest={
+                          handlesetransactionsPlannedDataFormRequest
+                        }
+                      />
+                    </Box>
+                  </Grid>
+                </Flex>
+              </TabPanel>
+
+              <TabPanel>
+                <Flex justify="center" width="100%" marginTop="20px">
+                  <Grid templateColumns="1fr 1fr" gap={4}>
+                    <Box
+                      border="1px solid #ccc"
+                      borderRadius="15px"
+                      padding="20px"
+                    >
+                      <GenericChakraForm
+                        fields={TransactionVariableFields}
+                        endpoint="cashflow/transaction-variable"
+                        onFormRequest={
+                          handlesetransactionsVariableDataFormRequest
+                        }
+                      />
+                    </Box>
+                    {/* Second column */}
+                    <Box
+                      border="1px solid #ccc"
+                      borderRadius="15px"
+                      padding="20px"
+                    >
+                      <ChakraTable
+                        data={transactionsVariableData}
+                        columnTranslations={{
+                          date: "Datum",
+                          amount: "Bedrag",
+                          category_name: "Categorie",
+                          description: "Beschrijving",
+                        }}
+                        endpoint="cashflow/transaction-variable"
+                        onFormRequest={
+                          handlesetransactionsVariableDataFormRequest
+                        }
+                      />
                     </Box>
                   </Grid>
                 </Flex>
