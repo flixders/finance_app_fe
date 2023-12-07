@@ -12,7 +12,7 @@ const LogoutButton = () => {
     <Button
       onClick={handleLogout}
       position="absolute"
-      top="10px"
+      top="30px"
       right="10px"
       colorScheme="red"
       variant="outline"

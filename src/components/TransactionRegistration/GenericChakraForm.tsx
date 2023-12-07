@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent } from "react";
-import { submitFormData } from "../utils/apiUtils";
-import { FormField } from "../utils/formFields";
+import { submitFormData } from "../../utils/apiUtils";
+import { FormField } from "../../utils/formFields";
 
 import {
   Input,

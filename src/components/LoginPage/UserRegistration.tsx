@@ -10,7 +10,7 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { registerUser, RegistrationResponse } from "../utils/apiUtils";
+import { registerUser, RegistrationResponse } from "../../utils/apiUtils";
 
 interface RegistrationFormProps {
   onRegistrationSuccess: () => void;

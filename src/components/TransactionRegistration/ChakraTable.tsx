@@ -12,7 +12,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { IoCloseOutline } from "react-icons/io5";
-import { deleteRecord } from "../utils/apiUtils";
+import { deleteRecord } from "../../utils/apiUtils";
 interface Props {
   data: { [key: string]: any }[];
   columnTranslations: { [key: string]: string };
@@ -37,7 +37,7 @@ const ChakraTable: React.FC<Props> = ({
   }
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage] = useState(6);
+  const [rowsPerPage] = useState(8);
   const maxButtonsToShow = 4; // Maximum number of page buttons to display
   const totalRows = data.length;
   const totalPages = Math.ceil(totalRows / rowsPerPage);
@@ -106,8 +106,6 @@ const ChakraTable: React.FC<Props> = ({
       style={{
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
-        height: "80vh",
       }}
     >
       <Table>
@@ -124,7 +122,15 @@ const ChakraTable: React.FC<Props> = ({
             .map((row, rowIndex) => (
               <Tr key={rowIndex}>
                 {columnsToShow.map((column, colIndex) => (
-                  <Td key={colIndex}>
+                  <Td
+                    key={colIndex}
+                    style={{
+                      maxWidth: "15ch", // Limiting to 10 characters
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
                     {column === euroColumn
                       ? formatAsEuros(row[column]) // Apply euro formatting
                       : row[column]}
@@ -145,29 +151,31 @@ const ChakraTable: React.FC<Props> = ({
         </Tbody>
       </Table>
 
-      {totalPages > 1 && (
-        <HStack spacing={2} justifyContent="flex-end">
-          <Button onClick={handlePrevPage} disabled={currentPage === 1}>
-            Vorige
-          </Button>
-          {displayPages.map((number) => (
-            <Button
-              key={number}
-              onClick={() => goToPage(number)}
-              variant={currentPage === number ? "solid" : "outline"}
-              colorScheme={currentPage === number ? "blue" : "gray"}
-            >
-              {number}
+      <div>
+        {totalPages > 1 && (
+          <HStack spacing={2} justifyContent="flex-end" marginTop={"20px"}>
+            <Button onClick={handlePrevPage} disabled={currentPage === 1}>
+              Vorige
             </Button>
-          ))}
-          <Button
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-          >
-            Volgende
-          </Button>
-        </HStack>
-      )}
+            {displayPages.map((number) => (
+              <Button
+                key={number}
+                onClick={() => goToPage(number)}
+                variant={currentPage === number ? "solid" : "outline"}
+                colorScheme={currentPage === number ? "blue" : "gray"}
+              >
+                {number}
+              </Button>
+            ))}
+            <Button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+            >
+              Volgende
+            </Button>
+          </HStack>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect } from "react";
 import { Box, Flex, Input, FormLabel } from "@chakra-ui/react";
-import { fetchBudgetOverview } from "../utils/apiUtils";
+import { fetchBudgetOverview } from "../../utils/apiUtils";
 
 interface DateAndDaysPickerProps {
   selectedStartDate: Date | null;

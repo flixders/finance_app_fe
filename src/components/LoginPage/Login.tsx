@@ -11,7 +11,7 @@ import {
   Text,
   IconButton,
 } from "@chakra-ui/react";
-import { loginUser, LoginResponse } from "../utils/apiUtils";
+import { loginUser, LoginResponse } from "../../utils/apiUtils";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 interface LoginFormProps {

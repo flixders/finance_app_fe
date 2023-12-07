@@ -2,7 +2,7 @@ import { Flex } from "@chakra-ui/react";
 import { FaMoneyBill } from "react-icons/fa";
 import ValueBox from "./ValueBox";
 import { useEffect, useState } from "react";
-import { fetchBudgetOverview } from "../utils/apiUtils";
+import { fetchBudgetOverview } from "../../utils/apiUtils";
 interface ValueBoxBudgetOverviewProps {
   startDate: Date | null;
   endDate: Date | null;
