@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import DateAndDaysPicker from "../TransactionOverview/DateAndDaysPicker";
 import ValueBoxBudgetOverview from "../TransactionOverview/ValueBoxBudgetOverview";
-import { Flex } from "@chakra-ui/react";
+import { Box, Flex, Grid } from "@chakra-ui/react";
+import SpendingVariableCategory from "../TransactionOverview/SpendingVariableCategory";
 
 const TransactionOverview = () => {
   //Dates
@@ -35,6 +36,27 @@ const TransactionOverview = () => {
           setSelectedEndDate={setEndDate}
         />
         <ValueBoxBudgetOverview startDate={startDate} endDate={endDate} />
+      </Flex>
+      <Flex marginTop={"30px"}>
+        <Grid
+          templateColumns="repeat(2, 1fr)"
+          gap={4}
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Box borderWidth="1px" borderRadius="md" p="4" shadow="md">
+            <SpendingVariableCategory startDate={startDate} endDate={endDate} />
+          </Box>
+          <Box borderWidth="1px" borderRadius="md" p="4" shadow="md">
+            <SpendingVariableCategory startDate={startDate} endDate={endDate} />
+          </Box>
+          <Box borderWidth="1px" borderRadius="md" p="4" shadow="md">
+            <SpendingVariableCategory startDate={startDate} endDate={endDate} />
+          </Box>
+          <Box borderWidth="1px" borderRadius="md" p="4" shadow="md">
+            <SpendingVariableCategory startDate={startDate} endDate={endDate} />
+          </Box>
+        </Grid>
       </Flex>
     </div>
   );

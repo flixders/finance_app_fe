@@ -13,20 +13,6 @@ function Navbar() {
       <Flex gap={4}>
         <Link
           as={NavLink}
-          to="/login"
-          fontSize="3xl"
-          _hover={{
-            color: "blue.400",
-          }}
-          _activeLink={activeLinkStyles}
-          className="nav-link"
-          color="black.600" // Grey color
-          mr={4}
-        >
-          Login
-        </Link>
-        <Link
-          as={NavLink}
           to="/registratie"
           fontSize="3xl"
           _hover={{

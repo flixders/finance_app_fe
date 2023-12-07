@@ -264,3 +264,38 @@ export async function fetchBudgetOverview(
     return null;
   }
 }
+
+export async function fetchSpendingVarOverview(
+  startDate?: string,
+  endDate?: string
+) {
+  const token = localStorage.getItem("jwt");
+
+  let endpoint = "cashflow/calculations/spending-variable/";
+  if (startDate && endDate) {
+    endpoint += `${startDate}/${endDate}`;
+  }
+
+  const url = `${API_BASE_URL}/${endpoint}`;
+  console.log(url);
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `JWT ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok.");
+    }
+
+    const data = await response.json();
+    console.log("Data retrieved:", data);
+    return data;
+  } catch (error) {
+    console.error("There was an error fetching budget overview data:", error);
+    return null;
+  }
+}

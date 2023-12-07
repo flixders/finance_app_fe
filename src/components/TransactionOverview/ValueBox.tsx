@@ -1,19 +1,18 @@
 import { Box, Flex, Icon, Text } from "@chakra-ui/react";
 import { ReactNode } from "react";
-import { IconType } from "react-icons";
 
 interface ValueBoxProps {
   title: string;
   value: ReactNode;
-  icon?: IconType;
-  iconColor?: string; // New prop to accept the color
+  icon?: React.ElementType; // Change the type to React.ElementType
+  iconColor?: string;
 }
 
 const ValueBox: React.FC<ValueBoxProps> = ({
   title,
   value,
   icon: IconComponent,
-  iconColor = "blue.200", // Default color if not provided
+  iconColor = "blue.100",
 }) => {
   return (
     <Box borderWidth="1px" borderRadius="md" p="4" shadow="md" width="275px">
@@ -22,12 +21,12 @@ const ValueBox: React.FC<ValueBoxProps> = ({
           <Text fontWeight="light" fontSize="lg">
             {title}
           </Text>
-          <Text fontWeight="normal" fontSize="4xl">
+          <Text fontWeight="bold" fontSize="4xl">
             {value}
           </Text>
         </Box>
         {IconComponent && (
-          <Icon as={IconComponent} ml="2" fontSize="5xl" color={iconColor} />
+          <Icon as={IconComponent} ml="2" fontSize="5xl" color={iconColor} /> // Use 'as' prop with IconComponent
         )}
       </Flex>
     </Box>

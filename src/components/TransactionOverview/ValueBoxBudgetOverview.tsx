@@ -1,5 +1,10 @@
 import { Flex } from "@chakra-ui/react";
-import { FaMoneyBill } from "react-icons/fa";
+import {
+  FaPiggyBank,
+  FaShoppingCart,
+  FaBriefcase,
+  FaMoneyBillWave,
+} from "react-icons/fa";
 import ValueBox from "./ValueBox";
 import { useEffect, useState } from "react";
 import { fetchBudgetOverview } from "../../utils/apiUtils";
@@ -30,20 +35,33 @@ const ValueBoxBudgetOverview: React.FC<ValueBoxBudgetOverviewProps> = ({
     }
   }, [startDate, endDate]);
 
+  const iconMapping: { [key: string]: React.ElementType } = {
+    "Inkomen vast": FaBriefcase,
+    "Uitgaven vast": FaMoneyBillWave,
+    "Uitgaven variabel": FaShoppingCart,
+    "Inkomen variabel": FaShoppingCart,
+    "Beschikbaar budget": FaPiggyBank,
+  };
+
   return (
     <Flex gap={5} marginTop={5}>
       {budgetData && budgetData.length > 0 ? (
-        budgetData.map((expense: any, index: number) => (
-          <ValueBox
-            key={index}
-            value={`€${expense.amount.toLocaleString("de-DE", {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            })}`}
-            title={expense.transaction_type_name}
-            icon={FaMoneyBill}
-          />
-        ))
+        budgetData.map((expense: any, index: number) => {
+          const IconComponent =
+            iconMapping[expense.transaction_type_title] || FaPiggyBank;
+
+          return (
+            <ValueBox
+              key={index}
+              value={`€${expense.amount.toLocaleString("de-DE", {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              })}`}
+              title={expense.transaction_type_title}
+              icon={IconComponent} // Use the dynamically selected icon component
+            />
+          );
+        })
       ) : (
         <p>Geen data beschikbaar</p>
       )}

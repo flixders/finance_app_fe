@@ -1,5 +1,6 @@
-import Login from "../LoginPage/Login";
-import UserRegistration from "../LoginPage/UserRegistration";
+import Login from "../Pages/Login";
+import UserRegistration from "./UserRegistration";
+import { useNavigate } from "react-router-dom";
 
 import {
   Flex,
@@ -14,7 +15,9 @@ interface LoginPageProps {
   onLoginSuccess: () => void;
 }
 const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
+  const navigate = useNavigate();
   const handleLoginSuccess = () => {
+    navigate("/registratie");
     onLoginSuccess();
   };
   return (

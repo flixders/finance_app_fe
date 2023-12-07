@@ -1,11 +1,17 @@
 import { Button } from "@chakra-ui/react";
 import { FiLogOut } from "react-icons/fi"; // Import the logout icon from React Icons
+import { useNavigate } from "react-router-dom";
 
-const LogoutButton = () => {
+interface LogoutButtonProps {
+  onLogoutSuccess: () => void;
+}
+const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogoutSuccess }) => {
+  const navigate = useNavigate();
+
   const handleLogout = () => {
-    console.log("Logout button clicked!"); // Ensure this log message appears in the console
     localStorage.removeItem("jwt");
-    window.location.reload();
+    onLogoutSuccess();
+    navigate("/login");
   };
 
   return (
