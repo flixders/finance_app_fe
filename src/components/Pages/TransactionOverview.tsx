@@ -3,6 +3,7 @@ import DateAndDaysPicker from "../TransactionOverview/DateAndDaysPicker";
 import ValueBoxBudgetOverview from "../TransactionOverview/ValueBoxBudgetOverview";
 import { Box, Flex, Grid } from "@chakra-ui/react";
 import SpendingVariableCategory from "../TransactionOverview/SpendingVariableCategory";
+import BankAccountTrend from "../TransactionOverview/BankAccountTrend";
 
 const TransactionOverview = () => {
   //Dates
@@ -48,7 +49,7 @@ const TransactionOverview = () => {
             <SpendingVariableCategory startDate={startDate} endDate={endDate} />
           </Box>
           <Box borderWidth="1px" borderRadius="md" p="4" shadow="md">
-            <SpendingVariableCategory startDate={startDate} endDate={endDate} />
+            <BankAccountTrend />
           </Box>
           <Box borderWidth="1px" borderRadius="md" p="4" shadow="md">
             <SpendingVariableCategory startDate={startDate} endDate={endDate} />

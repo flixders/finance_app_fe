@@ -1,7 +1,14 @@
 import { FormField } from "../utils/formFields";
 const API_BASE_URL = "http://127.0.0.1:8000/";
 
-export async function fetchData(endpoint: string) {
+export async function fetchData(
+  endpoint: string,
+  startDate?: string,
+  endDate?: string
+) {
+  if (startDate && endDate) {
+    endpoint += `/${startDate}/${endDate}`;
+  }
   const url = `${API_BASE_URL}/${endpoint}`;
   const token = localStorage.getItem("jwt");
   try {
@@ -228,74 +235,3 @@ export const registerUser = async (
     };
   }
 };
-
-export async function fetchBudgetOverview(
-  startDate?: string,
-  endDate?: string
-) {
-  let endpoint = "cashflow/calculations/budget-overview";
-
-  // Append start_date and end_date only if provided
-  if (startDate && endDate) {
-    endpoint += `/${startDate}/${endDate}`;
-  }
-
-  const token = localStorage.getItem("jwt");
-
-  try {
-    const url = `${API_BASE_URL}/${endpoint}`;
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `JWT ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok.");
-    }
-
-    const data = await response.json();
-    console.log("Data retrieved:", data);
-    return data;
-  } catch (error) {
-    console.error("There was an error fetching budget overview data:", error);
-    return null;
-  }
-}
-
-export async function fetchSpendingVarOverview(
-  startDate?: string,
-  endDate?: string
-) {
-  const token = localStorage.getItem("jwt");
-
-  let endpoint = "cashflow/calculations/spending-variable/";
-  if (startDate && endDate) {
-    endpoint += `${startDate}/${endDate}`;
-  }
-
-  const url = `${API_BASE_URL}/${endpoint}`;
-  console.log(url);
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `JWT ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok.");
-    }
-
-    const data = await response.json();
-    console.log("Data retrieved:", data);
-    return data;
-  } catch (error) {
-    console.error("There was an error fetching budget overview data:", error);
-    return null;
-  }
-}

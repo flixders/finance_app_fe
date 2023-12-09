@@ -1,7 +1,7 @@
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import React, { useState, useEffect } from "react";
-import { fetchSpendingVarOverview } from "../../utils/apiUtils";
+import { fetchData } from "../../utils/apiUtils";
 
 interface ChartComponentProps {
   startDate?: Date | null;
@@ -9,7 +9,7 @@ interface ChartComponentProps {
 }
 interface SpendingOverview {
   category_name: string;
-  amount: number;
+  amount: number | null | undefined;
 }
 
 const ChartComponent: React.FC<ChartComponentProps> = ({
@@ -18,12 +18,13 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 }) => {
   const [chartData, setChartData] = useState<SpendingOverview[] | null>(null);
 
-  const fetchChartData = async (start: Date, end: Date) => {
+  const fetchChartData = async (endpoint: string, start: Date, end: Date) => {
     try {
       const startDateString = start.toLocaleDateString("sv-SE");
       const endDateString = end.toLocaleDateString("sv-SE");
 
-      const data: SpendingOverview[] | null = await fetchSpendingVarOverview(
+      const data: SpendingOverview[] | null = await fetchData(
+        endpoint,
         startDateString,
         endDateString
       );
@@ -35,13 +36,21 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 
   useEffect(() => {
     if (startDate && endDate) {
-      fetchChartData(startDate, endDate);
+      fetchChartData(
+        "cashflow/calculations/spending-variable",
+        startDate,
+        endDate
+      );
     }
   }, [startDate, endDate]);
 
   const options: Highcharts.Options = {
     chart: {
       type: "column",
+      style: {
+        fontFamily:
+          "'-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;",
+      },
     },
     title: {
       text: "Variabele transacties per categorie",
@@ -49,16 +58,21 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     xAxis: {
       type: "category",
       title: {
-        text: "Categorie",
+        text: "",
       },
     },
     yAxis: {
       title: {
-        text: "Totaal bedrag (€)",
+        text: "",
       },
       labels: {
         formatter: function () {
-          return "€" + Highcharts.numberFormat(this.value, 0, ",", ".");
+          const numericValue = Number(this.value);
+          if (!isNaN(numericValue)) {
+            return "€" + Highcharts.numberFormat(numericValue, 0, ",", ".");
+          } else {
+            return "No label";
+          }
         },
       },
     },
@@ -70,8 +84,8 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     },
     plotOptions: {
       column: {
-        borderRadius: 20, // Adjust the border radius to make edges rounder
-        pointWidth: 30, // Adjust the width of the columns
+        borderRadius: 10,
+        pointWidth: 40,
         color: "#FEB2B2",
       },
     },
@@ -88,7 +102,14 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
         dataLabels: {
           enabled: true,
           formatter: function () {
-            return "€" + Highcharts.numberFormat(this.y, 0, ",", ".");
+            if (this.y !== null && this.y !== undefined) {
+              return "€" + Highcharts.numberFormat(this.y, 0, ",", ".");
+            } else {
+              return "No data";
+            }
+          },
+          animation: {
+            duration: 1000,
           },
         },
       },

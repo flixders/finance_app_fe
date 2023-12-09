@@ -7,7 +7,7 @@ import {
 } from "react-icons/fa";
 import ValueBox from "./ValueBox";
 import { useEffect, useState } from "react";
-import { fetchBudgetOverview } from "../../utils/apiUtils";
+import { fetchData } from "../../utils/apiUtils";
 interface ValueBoxBudgetOverviewProps {
   startDate: Date | null;
   endDate: Date | null;
@@ -23,7 +23,11 @@ const ValueBoxBudgetOverview: React.FC<ValueBoxBudgetOverviewProps> = ({
       const startDateString = start.toLocaleDateString("sv-SE");
       const endDateString = end.toLocaleDateString("sv-SE");
 
-      const data = await fetchBudgetOverview(startDateString, endDateString);
+      const data = await fetchData(
+        "cashflow/calculations/budget-overview",
+        startDateString,
+        endDateString
+      );
       setBudgetData(data);
     } catch (error) {
       console.error("Error fetching budget overview data:", error);

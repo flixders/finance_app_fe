@@ -64,12 +64,50 @@ const RegistrationPage: React.FC<{ isLoggedIn: boolean }> = ({
     <Tabs size="lg" variant="soft-rounded" isLazy>
       <Flex justifyContent={"center"}>
         <TabList>
+          <Tab>Variabele transacties</Tab>
           <Tab>Bankrekening</Tab>
           <Tab>Geplande transacties</Tab>
-          <Tab>Variabele transacties</Tab>
         </TabList>
       </Flex>
       <TabPanels>
+        <TabPanel>
+          <Flex justify="center" width="100%" marginTop="20px">
+            <Grid templateColumns="1fr 2fr" gap={4}>
+              <Box
+                border="1px solid #ccc"
+                borderRadius="15px"
+                padding="20px"
+                maxHeight={"475px"}
+              >
+                <GenericChakraForm
+                  fields={TransactionVariableFields}
+                  endpoint="cashflow/transaction-variable"
+                  onFormRequest={handlesetransactionsVariableDataFormRequest}
+                />
+              </Box>
+              {/* Second column */}
+              <Box
+                border="1px solid #ccc"
+                borderRadius="15px"
+                padding="20px"
+                minHeight={"475px"}
+              >
+                <ChakraTable
+                  data={transactionsVariableData}
+                  columnTranslations={{
+                    date: "Datum",
+                    amount: "Bedrag",
+                    category_name: "Categorie",
+                    description: "Beschrijving",
+                  }}
+                  endpoint="cashflow/transaction-variable"
+                  onFormRequest={handlesetransactionsVariableDataFormRequest}
+                  euroColumn="amount"
+                />
+              </Box>
+            </Grid>
+          </Flex>
+        </TabPanel>
         <TabPanel>
           <Flex justify="center" width="100%" marginTop="20px">
             <Grid templateColumns="1fr 2fr" gap={4}>
@@ -129,45 +167,6 @@ const RegistrationPage: React.FC<{ isLoggedIn: boolean }> = ({
                   }}
                   endpoint="cashflow/transaction-planned"
                   onFormRequest={handlesetransactionsPlannedDataFormRequest}
-                  euroColumn="amount"
-                />
-              </Box>
-            </Grid>
-          </Flex>
-        </TabPanel>
-
-        <TabPanel>
-          <Flex justify="center" width="100%" marginTop="20px">
-            <Grid templateColumns="1fr 2fr" gap={4}>
-              <Box
-                border="1px solid #ccc"
-                borderRadius="15px"
-                padding="20px"
-                maxHeight={"475px"}
-              >
-                <GenericChakraForm
-                  fields={TransactionVariableFields}
-                  endpoint="cashflow/transaction-variable"
-                  onFormRequest={handlesetransactionsVariableDataFormRequest}
-                />
-              </Box>
-              {/* Second column */}
-              <Box
-                border="1px solid #ccc"
-                borderRadius="15px"
-                padding="20px"
-                minHeight={"475px"}
-              >
-                <ChakraTable
-                  data={transactionsVariableData}
-                  columnTranslations={{
-                    date: "Datum",
-                    amount: "Bedrag",
-                    category_name: "Categorie",
-                    description: "Beschrijving",
-                  }}
-                  endpoint="cashflow/transaction-variable"
-                  onFormRequest={handlesetransactionsVariableDataFormRequest}
                   euroColumn="amount"
                 />
               </Box>
