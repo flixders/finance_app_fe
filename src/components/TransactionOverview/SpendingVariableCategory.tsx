@@ -47,25 +47,40 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
   const options: Highcharts.Options = {
     chart: {
       type: "column",
+      backgroundColor: "#1A202C", // Chakra UI's dark background color
       style: {
-        fontFamily:
-          "'-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;",
+        fontFamily: '"Roboto", sans-serif', // Chakra UI's font or choose appropriate font
+        color: "#E2E8F0", // Chakra UI's text color for contrast
       },
     },
     title: {
       text: "Variabele transacties per categorie",
+      style: {
+        fontSize: "22px",
+        color: "#E2E8F0", // Chakra UI's text color for titles
+      },
     },
     xAxis: {
       type: "category",
       title: {
         text: "",
       },
+      labels: {
+        style: {
+          color: "#E2E8F0", // Chakra UI's text color for axis labels
+        },
+      },
+      lineColor: "#4A5568", // Chakra UI's
     },
     yAxis: {
       title: {
         text: "",
       },
+      tickInterval: 50,
       labels: {
+        style: {
+          color: "#E2E8F0", // Chakra UI's text color for axis labels
+        },
         formatter: function () {
           const numericValue = Number(this.value);
           if (!isNaN(numericValue)) {
@@ -86,7 +101,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
       column: {
         borderRadius: 10,
         pointWidth: 40,
-        color: "#FEB2B2",
+        color: "#F56565",
       },
     },
     series: [
@@ -100,6 +115,9 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
             }))
           : [],
         dataLabels: {
+          style: {
+            fontSize: "16px", // Adjust the font size as needed
+          },
           enabled: true,
           formatter: function () {
             if (this.y !== null && this.y !== undefined) {

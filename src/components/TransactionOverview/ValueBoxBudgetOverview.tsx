@@ -6,39 +6,22 @@ import {
   FaMoneyBillWave,
 } from "react-icons/fa";
 import ValueBox from "./ValueBox";
-import { useEffect, useState } from "react";
-import { fetchData } from "../../utils/apiUtils";
+import { BudgetOverview } from "../../utils/interfaces";
+
 interface ValueBoxBudgetOverviewProps {
-  startDate: Date | null;
-  endDate: Date | null;
+  chartData: BudgetOverview[] | null;
 }
 
 const ValueBoxBudgetOverview: React.FC<ValueBoxBudgetOverviewProps> = ({
-  startDate,
-  endDate,
+  chartData,
 }) => {
-  const [budgetData, setBudgetData] = useState<any>(null);
-  const fetchBudgetData = async (start: Date, end: Date) => {
-    try {
-      const startDateString = start.toLocaleDateString("sv-SE");
-      const endDateString = end.toLocaleDateString("sv-SE");
+  if (chartData === null) {
+    return <p>Geen data beschikbaar</p>;
+  }
 
-      const data = await fetchData(
-        "cashflow/calculations/budget-overview",
-        startDateString,
-        endDateString
-      );
-      setBudgetData(data);
-    } catch (error) {
-      console.error("Error fetching budget overview data:", error);
-    }
-  };
-  useEffect(() => {
-    if (startDate && endDate) {
-      fetchBudgetData(startDate, endDate);
-    }
-  }, [startDate, endDate]);
-
+  //current date selection
+  let currentBudget: BudgetOverview[] | null = null;
+  currentBudget = chartData.slice(-5);
   const iconMapping: { [key: string]: React.ElementType } = {
     "Inkomen vast": FaBriefcase,
     "Uitgaven vast": FaMoneyBillWave,
@@ -46,11 +29,11 @@ const ValueBoxBudgetOverview: React.FC<ValueBoxBudgetOverviewProps> = ({
     "Inkomen variabel": FaShoppingCart,
     "Beschikbaar budget": FaPiggyBank,
   };
-
+  console.log(currentBudget);
   return (
     <Flex gap={5} marginTop={5}>
-      {budgetData && budgetData.length > 0 ? (
-        budgetData.map((expense: any, index: number) => {
+      {currentBudget && currentBudget.length > 0 ? (
+        currentBudget.map((expense: any, index: number) => {
           const IconComponent =
             iconMapping[expense.transaction_type_title] || FaPiggyBank;
 

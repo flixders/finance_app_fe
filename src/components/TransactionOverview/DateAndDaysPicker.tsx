@@ -2,10 +2,10 @@ import React, { ChangeEvent, useEffect } from "react";
 import { Box, Flex, Input, FormLabel } from "@chakra-ui/react";
 
 interface DateAndDaysPickerProps {
-  selectedStartDate: Date | null;
-  selectedEndDate: Date | null;
-  setSelectedStartDate: React.Dispatch<React.SetStateAction<Date | null>>;
-  setSelectedEndDate: React.Dispatch<React.SetStateAction<Date | null>>;
+  selectedStartDate: Date;
+  selectedEndDate: Date;
+  setSelectedStartDate: React.Dispatch<React.SetStateAction<Date>>;
+  setSelectedEndDate: React.Dispatch<React.SetStateAction<Date>>;
 }
 
 const DateAndDaysPicker: React.FC<DateAndDaysPickerProps> = ({

@@ -1,49 +1,39 @@
-import Highcharts, { SeriesLineOptions } from "highcharts";
+import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import React, { useState, useEffect } from "react";
-import { fetchData } from "../../utils/apiUtils";
+import { BudgetOverview } from "../../utils/interfaces";
 
-interface SpendingOverview {
-  date: string;
-  account_balance: number;
-}
-interface APIResponse {
-  results: SpendingOverview[];
+interface AvailableBudgetTrendProps {
+  chartData: BudgetOverview[] | null;
 }
 
-const ChartComponent: React.FC = () => {
-  const [chartData, setChartData] = useState<SpendingOverview[] | null>(null);
+const AvailableBudgetTrend: React.FC<AvailableBudgetTrendProps> = ({
+  chartData,
+}) => {
+  if (chartData === null) {
+    return <p>Geen data beschikbaar</p>;
+  }
+  const filteredBudgetData = chartData.filter(
+    (item) => item.transaction_type_title === "Budget"
+  );
 
-  const fetchChartData = async (endpoint: string) => {
-    try {
-      const response: APIResponse | null = await fetchData(endpoint);
-      if (response) {
-        setChartData(response.results);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-  useEffect(() => {
-    fetchChartData("cashflow/bank-account");
-  }, []);
-
-  const formattedData: [number, number][] = chartData
-    ? chartData.map((item) => {
+  const formattedFilteredData: [number, number][] = filteredBudgetData
+    ? filteredBudgetData.map((item) => {
         const [year, month, day] = item.date.split("-").map(Number);
-        const timestamp = Date.UTC(year, month - 1, day); // month is zero-based in JavaScript
-        return [timestamp, item.account_balance];
+        const timestamp = Date.UTC(year, month - 1, day);
+        return [timestamp, item.amount];
       })
     : [];
-  const sortedData: [number, number][] = formattedData
+
+  const sortedData: [number, number][] = formattedFilteredData
     .slice()
     .sort((a, b) => a[0] - b[0]);
+
   const options = {
     chart: {
       type: "spline",
     },
     title: {
-      text: " Totaal vermogen",
+      text: " Overgebleven budget",
     },
     xAxis: {
       type: "datetime",
@@ -90,14 +80,14 @@ const ChartComponent: React.FC = () => {
     },
     series: [
       {
-        name: "Vermogen",
+        name: "Budget",
         data: sortedData,
-        color: "#63B3ED", // Chakra blue.300 for line color
+        color: "#63B3ED",
         marker: {
-          enabled: true, // Show markers for all data points
-          fillColor: "white", // Marker fill color
-          lineColor: "#63B3ED", // Chakra blue.300 for marker outline color
-          lineWidth: 2, // Adjust the marker outline width if needed
+          enabled: true,
+          fillColor: "white",
+          lineColor: "#63B3ED",
+          lineWidth: 2,
         },
       },
     ],
@@ -110,4 +100,4 @@ const ChartComponent: React.FC = () => {
   );
 };
 
-export default ChartComponent;
+export default AvailableBudgetTrend;

@@ -1,33 +1,59 @@
 import { useEffect, useState } from "react";
-import DateAndDaysPicker from "../TransactionOverview/DateAndDaysPicker";
-import ValueBoxBudgetOverview from "../TransactionOverview/ValueBoxBudgetOverview";
+import { fetchData } from "../../utils/apiUtils";
 import { Box, Flex, Grid } from "@chakra-ui/react";
+import DateAndDaysPicker from "../TransactionOverview/DateAndDaysPicker";
 import SpendingVariableCategory from "../TransactionOverview/SpendingVariableCategory";
 import BankAccountTrend from "../TransactionOverview/BankAccountTrend";
+import ValueBoxBudgetOverview from "../TransactionOverview/ValueBoxBudgetOverview";
+import SpendingVariableTrend from "../TransactionOverview/SpendingVariableTrend";
+import { BudgetOverview } from "../../utils/interfaces";
+import AvailableBudgetTrend from "../TransactionOverview/AvailableBudgetTrend";
 
 const TransactionOverview = () => {
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  const today = new Date();
+  const currentDay = today.getDay(); // 0 is Sunday, 1 is Monday, etc.
+
+  // Calculate the last Monday
+  const lastMonday = new Date(today);
+  lastMonday.setDate(today.getDate() - ((currentDay + 6) % 7));
+  const [startDate, setStartDate] = useState<Date>(lastMonday);
+
+  const nextSunday = new Date(lastMonday);
+  nextSunday.setDate(lastMonday.getDate() + 6);
+  const [endDate, setEndDate] = useState<Date>(nextSunday);
+
+  const [chartData, setChartData] = useState<BudgetOverview[] | null>(null);
+  const fetchChartData = async (
+    endpoint: string,
+    endDate: Date,
+    interval: number
+  ) => {
+    try {
+      const endDateString = endDate.toLocaleDateString("sv-SE");
+
+      const data: BudgetOverview[] | null = await fetchData(
+        endpoint,
+        undefined,
+        endDateString,
+        interval
+      );
+      setChartData(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   useEffect(() => {
-    const today = new Date();
-    const currentDay = today.getDay(); // 0 is Sunday, 1 is Monday, etc.
+    const differenceInMs = Math.abs(endDate.getTime() - startDate.getTime());
+    const differenceInDays =
+      Math.ceil(differenceInMs / (1000 * 60 * 60 * 24)) + 1;
+    fetchChartData(
+      "cashflow/calculations/budget-interval",
+      endDate,
+      differenceInDays
+    );
+  }, [startDate, endDate]);
 
-    // Calculate the last Monday
-    const lastMonday = new Date(today);
-    lastMonday.setDate(today.getDate() - ((currentDay + 6) % 7));
-
-    // Calculate the following Sunday
-    const nextSunday = new Date(lastMonday);
-    nextSunday.setDate(lastMonday.getDate() + 6);
-
-    // Set the state for start and end dates
-    setStartDate(lastMonday);
-    setEndDate(nextSunday);
-  }, []);
-
-
-  
   return (
     <div style={{ padding: "20px 0px 0px 65px" }}>
       <Flex direction={"column"}>
@@ -37,29 +63,29 @@ const TransactionOverview = () => {
           setSelectedStartDate={setStartDate}
           setSelectedEndDate={setEndDate}
         />
-        <ValueBoxBudgetOverview startDate={startDate} endDate={endDate} />
+        <ValueBoxBudgetOverview chartData={chartData} />
       </Flex>
-      <Flex marginTop={"30px"}>
-        <Grid
-          templateColumns="repeat(2, 1fr)"
-          gap={4}
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Box borderWidth="1px" borderRadius="md" p="4" shadow="md">
-            <SpendingVariableCategory startDate={startDate} endDate={endDate} />
-          </Box>
-          <Box borderWidth="1px" borderRadius="md" p="4" shadow="md">
-            <BankAccountTrend />
-          </Box>
-          <Box borderWidth="1px" borderRadius="md" p="4" shadow="md">
-            <SpendingVariableCategory startDate={startDate} endDate={endDate} />
-          </Box>
-          <Box borderWidth="1px" borderRadius="md" p="4" shadow="md">
-            <SpendingVariableCategory startDate={startDate} endDate={endDate} />
-          </Box>
-        </Grid>
-      </Flex>
+      <Grid
+        marginTop="40px"
+        paddingRight={"40px"}
+        templateColumns="repeat(2, 1fr)"
+        gap={4}
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Box borderWidth="1px" borderRadius="md" p="4" shadow="md">
+          <SpendingVariableCategory startDate={startDate} endDate={endDate} />
+        </Box>
+        <Box borderWidth="1px" borderRadius="md" p="4" shadow="md">
+          <SpendingVariableTrend chartData={chartData} />
+        </Box>
+        <Box borderWidth="1px" borderRadius="md" p="4" shadow="md">
+          <AvailableBudgetTrend chartData={chartData} />
+        </Box>
+        <Box borderWidth="1px" borderRadius="md" p="4" shadow="md">
+          <BankAccountTrend />
+        </Box>
+      </Grid>
     </div>
   );
 };

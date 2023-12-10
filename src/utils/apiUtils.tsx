@@ -4,10 +4,15 @@ const API_BASE_URL = "http://127.0.0.1:8000/";
 export async function fetchData(
   endpoint: string,
   startDate?: string,
-  endDate?: string
+  endDate?: string,
+  interval?: number
 ) {
   if (startDate && endDate) {
     endpoint += `/${startDate}/${endDate}`;
+  }
+  //add endpoint names
+  if (endDate && interval) {
+    endpoint += `/${endDate}/${interval}`;
   }
   const url = `${API_BASE_URL}/${endpoint}`;
   const token = localStorage.getItem("jwt");
