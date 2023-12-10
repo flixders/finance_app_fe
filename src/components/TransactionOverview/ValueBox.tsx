@@ -15,7 +15,7 @@ const ValueBox: React.FC<ValueBoxProps> = ({
   iconColor = "blue.100",
 }) => {
   return (
-    <Box borderWidth="1px" borderRadius="md" p="4" shadow="md" width="275px">
+    <Box borderWidth="1px" borderRadius="md" p="4" shadow="md" width="18%">
       <Flex justifyContent="space-between" alignItems="center">
         <Box>
           <Text fontWeight="light" fontSize="lg">
@@ -26,7 +26,7 @@ const ValueBox: React.FC<ValueBoxProps> = ({
           </Text>
         </Box>
         {IconComponent && (
-          <Icon as={IconComponent} ml="2" fontSize="5xl" color={iconColor} /> // Use 'as' prop with IconComponent
+          <Icon as={IconComponent} ml="2" fontSize="4xl" color={iconColor} /> // Use 'as' prop with IconComponent
         )}
       </Flex>
     </Box>

@@ -6,7 +6,6 @@ import SpendingVariableCategory from "../TransactionOverview/SpendingVariableCat
 import BankAccountTrend from "../TransactionOverview/BankAccountTrend";
 
 const TransactionOverview = () => {
-  //Dates
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
@@ -27,6 +26,8 @@ const TransactionOverview = () => {
     setEndDate(nextSunday);
   }, []);
 
+
+  
   return (
     <div style={{ padding: "20px 0px 0px 65px" }}>
       <Flex direction={"column"}>
