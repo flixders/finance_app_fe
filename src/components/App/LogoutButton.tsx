@@ -19,7 +19,7 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogoutSuccess }) => {
       onClick={handleLogout}
       position="absolute"
       top="30px"
-      right="10px"
+      right="35px"
       colorScheme="red"
       variant="outline"
       leftIcon={<FiLogOut />} // Add the logout icon to the button

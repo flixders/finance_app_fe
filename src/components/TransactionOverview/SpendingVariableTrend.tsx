@@ -20,7 +20,7 @@ const SpendingVariableTrend: React.FC<SpendingVariableProps> = ({
     ? filteredBudgetData.map((item) => {
         const [year, month, day] = item.date.split("-").map(Number);
         const timestamp = Date.UTC(year, month - 1, day);
-        return [timestamp, item.amount];
+        return [timestamp, item.amount * -1];
       })
     : [];
 
@@ -30,22 +30,57 @@ const SpendingVariableTrend: React.FC<SpendingVariableProps> = ({
 
   const options = {
     chart: {
-      type: "spline",
+      type: "areaspline",
+      backgroundColor: "#1A202C", // Chakra UI's dark background color
+      style: {
+        fontFamily: '"Roboto", sans-serif', // Chakra UI's font or choose appropriate font
+        color: "#E2E8F0", // Chakra UI's text color for contrast
+      },
+    },
+    plotOptions: {
+      areaspline: {
+        fillOpacity: 0.5,
+        fillColor: {
+          linearGradient: [0, 0, 0, 300],
+          stops: [
+            [0, "rgba(245, 101, 101, 1)"], // Higher opacity at the start
+            [0.8, "rgba(245, 101, 101, 0.2)"], // Lower opacity in the middle
+            [1, "rgba(245, 101, 101, 0.1)"], // Lower opacity in the middle
+          ],
+        },
+      },
     },
     title: {
       text: " Trend variabele uitgaven",
+      margin: 30,
+      style: {
+        fontSize: "22px",
+        fontWeight: "100",
+        color: "#E2E8F0", // Chakra UI's text color for titles
+      },
     },
     xAxis: {
       type: "datetime",
       title: {
         text: "",
       },
+      labels: {
+        style: {
+          color: "#E2E8F0", // Chakra UI's text color for axis labels
+        },
+      },
+      lineColor: "#4A5568", // Chakra UI's
     },
     yAxis: {
+      tickInterval: 150,
       title: {
         text: "",
       },
+      gridLineColor: "rgba(226, 232, 240, 0.1)",
       labels: {
+        style: {
+          color: "#E2E8F0", // Chakra UI's text color for axis labels
+        },
         formatter: function (
           this: Highcharts.AxisLabelsFormatterContextObject
         ) {
@@ -82,11 +117,11 @@ const SpendingVariableTrend: React.FC<SpendingVariableProps> = ({
       {
         name: "Variabele uitgave",
         data: sortedData,
-        color: "#FEB2B2",
+        color: "#F56565",
         marker: {
           enabled: true,
           fillColor: "white",
-          lineColor: "#FEB2B2",
+          lineColor: "#F56565",
           lineWidth: 2,
         },
       },

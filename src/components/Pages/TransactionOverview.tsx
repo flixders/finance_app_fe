@@ -66,23 +66,23 @@ const TransactionOverview = () => {
         <ValueBoxBudgetOverview chartData={chartData} />
       </Flex>
       <Grid
-        marginTop="40px"
+        marginTop="25px"
         paddingRight={"40px"}
         templateColumns="repeat(2, 1fr)"
         gap={4}
         justifyContent="center"
         alignItems="center"
       >
-        <Box borderWidth="1px" borderRadius="md" p="4" shadow="md">
+        <Box border="1px solid #ccc" borderRadius="15px" padding={"20px"}>
           <SpendingVariableCategory startDate={startDate} endDate={endDate} />
         </Box>
-        <Box borderWidth="1px" borderRadius="md" p="4" shadow="md">
+        <Box border="1px solid #ccc" borderRadius="15px" padding={"20px"}>
           <SpendingVariableTrend chartData={chartData} />
         </Box>
-        <Box borderWidth="1px" borderRadius="md" p="4" shadow="md">
+        <Box border="1px solid #ccc" borderRadius="15px" padding={"20px"}>
           <AvailableBudgetTrend chartData={chartData} />
         </Box>
-        <Box borderWidth="1px" borderRadius="md" p="4" shadow="md">
+        <Box border="1px solid #ccc" borderRadius="15px" padding={"20px"}>
           <BankAccountTrend />
         </Box>
       </Grid>

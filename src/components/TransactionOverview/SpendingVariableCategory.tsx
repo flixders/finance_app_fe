@@ -55,7 +55,9 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     },
     title: {
       text: "Variabele transacties per categorie",
+      margin: 30,
       style: {
+        fontWeight: "100",
         fontSize: "22px",
         color: "#E2E8F0", // Chakra UI's text color for titles
       },
@@ -73,6 +75,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
       lineColor: "#4A5568", // Chakra UI's
     },
     yAxis: {
+      gridLineColor: "rgba(226, 232, 240, 0.1)",
       title: {
         text: "",
       },
@@ -95,19 +98,26 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
       enabled: false,
     },
     tooltip: {
-      enabled: false,
+      pointFormatter: function () {
+        if (this.y !== null && this.y !== undefined) {
+          return `<span style="color:${this.color}">\u25CF</span> ${
+            this.series.name
+          }: <b>${"€" + Highcharts.numberFormat(this.y, 0, ",", ".")}</b><br/>`;
+        }
+        return "";
+      },
     },
     plotOptions: {
       column: {
         borderRadius: 10,
         pointWidth: 40,
-        color: "#F56565",
+        color: "rgba(245, 101, 101, 0.6)",
       },
     },
     series: [
       {
         type: "column",
-        name: "Amount",
+        name: "Bedrag",
         data: chartData
           ? chartData.map((item) => ({
               name: item.category_name,

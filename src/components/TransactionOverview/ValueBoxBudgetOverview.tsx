@@ -4,6 +4,7 @@ import {
   FaShoppingCart,
   FaBriefcase,
   FaMoneyBillWave,
+  FaCoins,
 } from "react-icons/fa";
 import ValueBox from "./ValueBox";
 import { BudgetOverview } from "../../utils/interfaces";
@@ -26,7 +27,7 @@ const ValueBoxBudgetOverview: React.FC<ValueBoxBudgetOverviewProps> = ({
     "Inkomen vast": FaBriefcase,
     "Uitgaven vast": FaMoneyBillWave,
     "Uitgaven variabel": FaShoppingCart,
-    "Inkomen variabel": FaShoppingCart,
+    "Inkomen variabel": FaCoins,
     "Beschikbaar budget": FaPiggyBank,
   };
   console.log(currentBudget);

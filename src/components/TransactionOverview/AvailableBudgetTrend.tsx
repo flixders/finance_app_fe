@@ -30,22 +30,58 @@ const AvailableBudgetTrend: React.FC<AvailableBudgetTrendProps> = ({
 
   const options = {
     chart: {
-      type: "spline",
+      type: "areaspline",
+      backgroundColor: "#1A202C", // Chakra UI's dark background color
+      style: {
+        fontFamily: '"Roboto", sans-serif', // Chakra UI's font or choose appropriate font
+        color: "#E2E8F0", // Chakra UI's text color for contrast
+      },
+    },
+    plotOptions: {
+      areaspline: {
+        fillOpacity: 0.5,
+        fillColor: {
+          linearGradient: [0, 0, 0, 300],
+          stops: [
+            [0, "rgba(56, 161, 105, 1)"],
+            [0.5, "rgba(56, 161, 105, 0.2)"],
+            [1, "rgba(56, 161, 105, 0)"],
+          ],
+        },
+      },
     },
     title: {
-      text: " Overgebleven budget",
+      text: " Trend overgebleven budget",
+      margin: 30,
+      style: {
+        fontSize: "22px",
+        fontWeight: "100",
+        marginBottom: "40px",
+        color: "#E2E8F0", // Chakra UI's text color for titles
+      },
     },
     xAxis: {
       type: "datetime",
       title: {
         text: "",
       },
+      labels: {
+        style: {
+          color: "#E2E8F0", // Chakra UI's text color for axis labels
+        },
+      },
+      lineColor: "#4A5568", // Chakra UI's
     },
     yAxis: {
+      tickInterval: 150,
       title: {
         text: "",
       },
+      gridLineColor: "rgba(226, 232, 240, 0.1)",
       labels: {
+        style: {
+          color: "#E2E8F0", // Chakra UI's text color for axis labels
+        },
         formatter: function (
           this: Highcharts.AxisLabelsFormatterContextObject
         ) {
@@ -80,13 +116,13 @@ const AvailableBudgetTrend: React.FC<AvailableBudgetTrendProps> = ({
     },
     series: [
       {
-        name: "Budget",
+        name: "Variabele uitgave",
         data: sortedData,
-        color: "#63B3ED",
+        color: "#38A169",
         marker: {
           enabled: true,
           fillColor: "white",
-          lineColor: "#63B3ED",
+          lineColor: "#38A169",
           lineWidth: 2,
         },
       },

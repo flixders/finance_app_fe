@@ -33,6 +33,9 @@ const DateAndDaysPicker: React.FC<DateAndDaysPickerProps> = ({
           <b>Start periode</b>
         </FormLabel>
         <Input
+          border="1px solid #ccc"
+          borderRadius="15px"
+          padding={"20px"}
           type="date"
           name="StartDate"
           value={
@@ -48,6 +51,9 @@ const DateAndDaysPicker: React.FC<DateAndDaysPickerProps> = ({
           <b>Einde periode</b>
         </FormLabel>
         <Input
+          border="1px solid #ccc"
+          borderRadius="15px"
+          padding={"20px"}
           type="date"
           name="EndDate"
           value={

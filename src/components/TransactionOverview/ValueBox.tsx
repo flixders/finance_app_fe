@@ -15,7 +15,12 @@ const ValueBox: React.FC<ValueBoxProps> = ({
   iconColor = "blue.100",
 }) => {
   return (
-    <Box borderWidth="1px" borderRadius="md" p="4" shadow="md" width="18%">
+    <Box
+      border="1px solid #ccc"
+      borderRadius="15px"
+      padding={"20px"}
+      width="18%"
+    >
       <Flex justifyContent="space-between" alignItems="center">
         <Box>
           <Text fontWeight="light" fontSize="lg">

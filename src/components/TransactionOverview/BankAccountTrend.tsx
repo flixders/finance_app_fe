@@ -1,4 +1,4 @@
-import Highcharts, { SeriesLineOptions } from "highcharts";
+import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import React, { useState, useEffect } from "react";
 import { fetchData } from "../../utils/apiUtils";
@@ -41,21 +41,50 @@ const ChartComponent: React.FC = () => {
   const options = {
     chart: {
       type: "spline",
+      backgroundColor: "#1A202C", // Chakra UI's dark background color
+      style: {
+        fontFamily: '"Roboto", sans-serif', // Chakra UI's font or choose appropriate font
+        color: "#E2E8F0", // Chakra UI's text color for contrast
+      },
+    },
+    plotOptions: {
+      spline: {
+        lineWidth: 3, // Adjust the line width for the line series
+      },
+      // Other plot options for different series types if needed...
     },
     title: {
-      text: " Totaal vermogen",
+      text: "Ontwikkeling vermogen",
+      margin: 30,
+      style: {
+        fontSize: "22px",
+        fontWeight: "100",
+        margin: 20,
+        color: "#E2E8F0", // Chakra UI's text color for titles
+      },
     },
     xAxis: {
       type: "datetime",
       title: {
         text: "",
       },
+      labels: {
+        style: {
+          color: "#E2E8F0", // Chakra UI's text color for axis labels
+        },
+      },
+      lineColor: "#4A5568", // Chakra UI's
     },
     yAxis: {
+      tickInterval: 750,
       title: {
         text: "",
       },
+      gridLineColor: "rgba(226, 232, 240, 0.1)",
       labels: {
+        style: {
+          color: "#E2E8F0", // Chakra UI's text color for axis labels
+        },
         formatter: function (
           this: Highcharts.AxisLabelsFormatterContextObject
         ) {
@@ -92,12 +121,13 @@ const ChartComponent: React.FC = () => {
       {
         name: "Vermogen",
         data: sortedData,
-        color: "#63B3ED", // Chakra blue.300 for line color
+        color: "#38A169", // Chakra blue.300 for line color
         marker: {
           enabled: true, // Show markers for all data points
           fillColor: "white", // Marker fill color
-          lineColor: "#63B3ED", // Chakra blue.300 for marker outline color
+          lineColor: "#38A169", // Chakra blue.300 for marker outline color
           lineWidth: 2, // Adjust the marker outline width if needed
+          radius: 5, // Adjust the marker size
         },
       },
     ],
