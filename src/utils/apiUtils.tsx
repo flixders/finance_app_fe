@@ -219,8 +219,7 @@ export const registerUser = async (
 
     if (response.ok) {
       const data = await response.json();
-      const jwt = data.access;
-      localStorage.setItem("jwt", jwt);
+      console.log(data);
       return { success: true };
     } else {
       const data = await response.json();

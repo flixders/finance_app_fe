@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, Skeleton } from "@chakra-ui/react";
 import {
   FaPiggyBank,
   FaShoppingCart,
@@ -17,7 +17,7 @@ const ValueBoxBudgetOverview: React.FC<ValueBoxBudgetOverviewProps> = ({
   chartData,
 }) => {
   if (chartData === null) {
-    return <p>Geen data beschikbaar</p>;
+    return <p style={{ marginTop: "20px" }}>Geen data beschikbaar</p>;
   }
 
   //current date selection
@@ -30,7 +30,6 @@ const ValueBoxBudgetOverview: React.FC<ValueBoxBudgetOverviewProps> = ({
     "Inkomen variabel": FaCoins,
     "Beschikbaar budget": FaPiggyBank,
   };
-  console.log(currentBudget);
   return (
     <Flex gap={5} marginTop={5}>
       {currentBudget && currentBudget.length > 0 ? (

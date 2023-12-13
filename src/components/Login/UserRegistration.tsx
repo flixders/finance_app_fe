@@ -112,7 +112,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
             />
           </FormControl>
           <Button colorScheme="blue" mt={6} type="submit" width="100%">
-            Registreer en log in
+            Registreer
           </Button>
         </form>
         {error && (

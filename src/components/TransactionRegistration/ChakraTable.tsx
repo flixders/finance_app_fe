@@ -8,8 +8,7 @@ import {
   Tr,
   Button,
   HStack,
-  Spinner,
-  Text,
+  Skeleton,
 } from "@chakra-ui/react";
 import { IoCloseOutline } from "react-icons/io5";
 import { deleteRecord } from "../../utils/apiUtils";
@@ -28,12 +27,9 @@ const ChakraTable: React.FC<Props> = ({
   endpoint,
   euroColumn,
 }) => {
-  if (!data) {
-    return <Spinner />;
-  }
-
+  console.log(data);
   if (data.length === 0) {
-    return <Text>Nog geen gegevens ingevuld</Text>;
+    return;
   }
 
   const [currentPage, setCurrentPage] = useState(1);

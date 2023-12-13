@@ -13,7 +13,6 @@ interface APIResponse {
 
 const ChartComponent: React.FC = () => {
   const [chartData, setChartData] = useState<SpendingOverview[] | null>(null);
-
   const fetchChartData = async (endpoint: string) => {
     try {
       const response: APIResponse | null = await fetchData(endpoint);
@@ -76,7 +75,6 @@ const ChartComponent: React.FC = () => {
       lineColor: "#4A5568", // Chakra UI's
     },
     yAxis: {
-      tickInterval: 750,
       title: {
         text: "",
       },

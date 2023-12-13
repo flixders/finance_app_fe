@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import ChakraTable from "../TransactionRegistration/ChakraTable";
 import GenericChakraForm from "../TransactionRegistration/GenericChakraForm";
-import { fetchDataAndUpdateState } from "../../utils/apiUtils";
+import {
+  fetchDataAndUpdateState,
+  updateFieldOptions,
+} from "../../utils/apiUtils";
 import {
   BankAccountFormFields,
   TransactionVariableFields,
@@ -45,6 +48,34 @@ const RegistrationPage: React.FC<{ isLoggedIn: boolean }> = ({
       );
     }
   };
+  useEffect(() => {
+    updateFieldOptions(
+      TransactionPlannedFields,
+      "cashflow/transaction-category-list",
+      "category",
+      "id",
+      "category_name"
+    )
+      .then((updatedFields) => {
+        console.log("Updated TransactionPlannedFields:", updatedFields);
+      })
+      .catch((error) => {
+        console.error("Error updating TransactionPlannedFields:", error);
+      });
+    updateFieldOptions(
+      TransactionPlannedFields,
+      "cashflow/transaction-payment-term-list",
+      "payment_term",
+      "id",
+      "payment_term_name_dutch"
+    )
+      .then((updatedFields) => {
+        console.log("Updated TransactionPlannedFields:", updatedFields);
+      })
+      .catch((error) => {
+        console.error("Error updating TransactionPlannedFields:", error);
+      });
+  }, [isLoggedIn]);
 
   // VARIABELE LASTEN
   const [transactionsVariableData, setransactionsVariableData] = useState<
@@ -59,13 +90,28 @@ const RegistrationPage: React.FC<{ isLoggedIn: boolean }> = ({
       );
     }
   };
+  useEffect(() => {
+    updateFieldOptions(
+      TransactionVariableFields,
+      "cashflow/transaction-category-list",
+      "category",
+      "id",
+      "category_name"
+    )
+      .then((updatedFields) => {
+        console.log("Updated TransactionVariableFields:", updatedFields);
+      })
+      .catch((error) => {
+        console.error("Error updating TransactionVariableFields:", error);
+      });
+  }, [isLoggedIn]);
 
   return (
     <Tabs size="lg" variant="soft-rounded" isLazy>
       <Flex justifyContent={"center"}>
         <TabList>
           <Tab>Variabele transacties</Tab>
-          <Tab>Bankrekening</Tab>
+          <Tab>Vermogen</Tab>
           <Tab>Geplande transacties</Tab>
         </TabList>
       </Flex>

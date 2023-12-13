@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchData } from "../../utils/apiUtils";
-import { Box, Flex, Grid } from "@chakra-ui/react";
+import { Box, Flex, Grid, Skeleton } from "@chakra-ui/react";
 import DateAndDaysPicker from "../TransactionOverview/DateAndDaysPicker";
 import SpendingVariableCategory from "../TransactionOverview/SpendingVariableCategory";
 import BankAccountTrend from "../TransactionOverview/BankAccountTrend";
@@ -11,47 +11,57 @@ import AvailableBudgetTrend from "../TransactionOverview/AvailableBudgetTrend";
 
 const TransactionOverview = () => {
   const today = new Date();
-  const currentDay = today.getDay(); // 0 is Sunday, 1 is Monday, etc.
+  const currentDay = today.getDay();
 
   // Calculate the last Monday
   const lastMonday = new Date(today);
   lastMonday.setDate(today.getDate() - ((currentDay + 6) % 7));
   const [startDate, setStartDate] = useState<Date>(lastMonday);
 
-  const nextSunday = new Date(lastMonday);
-  nextSunday.setDate(lastMonday.getDate() + 6);
-  const [endDate, setEndDate] = useState<Date>(nextSunday);
-
+  const [endDate, setEndDate] = useState<Date | null>(null);
   const [chartData, setChartData] = useState<BudgetOverview[] | null>(null);
-  const fetchChartData = async (
-    endpoint: string,
-    endDate: Date,
-    interval: number
-  ) => {
-    try {
-      const endDateString = endDate.toLocaleDateString("sv-SE");
 
+  const fetchChartData = async (endpoint: string, start: Date, end: Date) => {
+    try {
+      setIsLoading(true);
+      const differenceInMs = Math.abs(end.getTime() - start.getTime());
+      const differenceInDays =
+        Math.ceil(differenceInMs / (1000 * 60 * 60 * 24)) + 1;
+
+      const year = end.getFullYear();
+      const month = String(end.getMonth() + 1).padStart(2, "0");
+      const day = String(end.getDate()).padStart(2, "0");
+      const endDateString = `${year}-${month}-${day}`;
       const data: BudgetOverview[] | null = await fetchData(
         endpoint,
         undefined,
         endDateString,
-        interval
+        differenceInDays
       );
       setChartData(data);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    const differenceInMs = Math.abs(endDate.getTime() - startDate.getTime());
-    const differenceInDays =
-      Math.ceil(differenceInMs / (1000 * 60 * 60 * 24)) + 1;
-    fetchChartData(
-      "cashflow/calculations/budget-interval",
-      endDate,
-      differenceInDays
-    );
+    const nextSunday = new Date(startDate);
+    nextSunday.setDate(startDate.getDate() + 6);
+    setEndDate(nextSunday);
+  }, [startDate]);
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  useEffect(() => {
+    if (endDate) {
+      fetchChartData(
+        "cashflow/calculations/budget-interval",
+        startDate,
+        endDate
+      );
+    }
   }, [startDate, endDate]);
 
   return (
@@ -63,29 +73,63 @@ const TransactionOverview = () => {
           setSelectedStartDate={setStartDate}
           setSelectedEndDate={setEndDate}
         />
-        <ValueBoxBudgetOverview chartData={chartData} />
       </Flex>
-      <Grid
-        marginTop="25px"
-        paddingRight={"40px"}
-        templateColumns="repeat(2, 1fr)"
-        gap={4}
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Box border="1px solid #ccc" borderRadius="15px" padding={"20px"}>
-          <SpendingVariableCategory startDate={startDate} endDate={endDate} />
-        </Box>
-        <Box border="1px solid #ccc" borderRadius="15px" padding={"20px"}>
-          <SpendingVariableTrend chartData={chartData} />
-        </Box>
-        <Box border="1px solid #ccc" borderRadius="15px" padding={"20px"}>
-          <AvailableBudgetTrend chartData={chartData} />
-        </Box>
-        <Box border="1px solid #ccc" borderRadius="15px" padding={"20px"}>
-          <BankAccountTrend />
-        </Box>
-      </Grid>
+      {isLoading ? (
+        <>
+          <Flex gap={5} marginTop={5}>
+            {[...Array(5)].map((_, index) => (
+              <Skeleton
+                key={index}
+                height="120px"
+                width="18%"
+                borderRadius="20px"
+                boxShadow="md"
+                variant={"text"}
+              />
+            ))}
+          </Flex>
+          <Grid
+            marginTop="25px"
+            paddingRight={"40px"}
+            templateColumns="repeat(2, 1fr)"
+            gap={4}
+            justifyContent="center"
+            alignItems="center"
+          >
+            {[...Array(4)].map((_) => (
+              <Skeleton height="50vh" borderRadius={"20px"} />
+            ))}
+          </Grid>
+        </>
+      ) : (
+        <>
+          <ValueBoxBudgetOverview chartData={chartData} />
+          <Grid
+            marginTop="25px"
+            paddingRight={"40px"}
+            templateColumns="repeat(2, 1fr)"
+            gap={4}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Box border="1px solid #ccc" borderRadius="15px" padding={"20px"}>
+              <SpendingVariableCategory
+                startDate={startDate}
+                endDate={endDate}
+              />
+            </Box>
+            <Box border="1px solid #ccc" borderRadius="15px" padding={"20px"}>
+              <AvailableBudgetTrend chartData={chartData} />
+            </Box>
+            <Box border="1px solid #ccc" borderRadius="15px" padding={"20px"}>
+              <SpendingVariableTrend chartData={chartData} />
+            </Box>
+            <Box border="1px solid #ccc" borderRadius="15px" padding={"20px"}>
+              <BankAccountTrend />
+            </Box>
+          </Grid>
+        </>
+      )}
     </div>
   );
 };

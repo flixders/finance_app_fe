@@ -73,7 +73,6 @@ const AvailableBudgetTrend: React.FC<AvailableBudgetTrendProps> = ({
       lineColor: "#4A5568", // Chakra UI's
     },
     yAxis: {
-      tickInterval: 150,
       title: {
         text: "",
       },
@@ -116,7 +115,7 @@ const AvailableBudgetTrend: React.FC<AvailableBudgetTrendProps> = ({
     },
     series: [
       {
-        name: "Variabele uitgave",
+        name: "Overgebleven budget",
         data: sortedData,
         color: "#38A169",
         marker: {

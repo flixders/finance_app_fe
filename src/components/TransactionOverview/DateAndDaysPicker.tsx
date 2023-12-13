@@ -1,11 +1,11 @@
-import React, { ChangeEvent, useEffect } from "react";
+import React, { ChangeEvent } from "react";
 import { Box, Flex, Input, FormLabel } from "@chakra-ui/react";
 
 interface DateAndDaysPickerProps {
-  selectedStartDate: Date;
-  selectedEndDate: Date;
+  selectedStartDate: Date | null;
+  selectedEndDate: Date | null;
   setSelectedStartDate: React.Dispatch<React.SetStateAction<Date>>;
-  setSelectedEndDate: React.Dispatch<React.SetStateAction<Date>>;
+  setSelectedEndDate: React.Dispatch<React.SetStateAction<Date | null>>;
 }
 
 const DateAndDaysPicker: React.FC<DateAndDaysPickerProps> = ({
@@ -23,6 +23,7 @@ const DateAndDaysPicker: React.FC<DateAndDaysPickerProps> = ({
   const handleEndDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const dateValue = e.target.value;
     const newEndDate = new Date(dateValue);
+    console.log(newEndDate);
     setSelectedEndDate(newEndDate);
   };
 
@@ -42,6 +43,11 @@ const DateAndDaysPicker: React.FC<DateAndDaysPickerProps> = ({
             selectedStartDate
               ? selectedStartDate.toLocaleDateString("sv-SE")
               : ""
+          }
+          max={
+            selectedEndDate
+              ? selectedEndDate.toLocaleDateString("sv-SE")
+              : undefined
           }
           onChange={handleStartDateChange}
         />

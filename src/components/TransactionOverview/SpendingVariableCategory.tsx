@@ -17,7 +17,6 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
   endDate,
 }) => {
   const [chartData, setChartData] = useState<SpendingOverview[] | null>(null);
-
   const fetchChartData = async (endpoint: string, start: Date, end: Date) => {
     try {
       const startDateString = start.toLocaleDateString("sv-SE");
@@ -79,7 +78,6 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
       title: {
         text: "",
       },
-      tickInterval: 50,
       labels: {
         style: {
           color: "#E2E8F0", // Chakra UI's text color for axis labels

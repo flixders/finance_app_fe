@@ -1,5 +1,3 @@
-import { updateFieldOptions } from "./apiUtils";
-
 export interface FormField {
   name: string;
   inputType: "input" | "select";
@@ -59,20 +57,7 @@ export const TransactionVariableFields: FormField[] = generateFormFields([
     placeholder: "",
   },
 ]);
-updateFieldOptions(
-  TransactionVariableFields,
-  "cashflow/transaction-category-list",
-  "category",
-  "id",
-  "category_name"
-)
-  .then((updatedFields) => {
-    // Optionally, you can use the updatedFields here if needed
-    console.log("Updated TransactionVariableFields:", updatedFields);
-  })
-  .catch((error) => {
-    console.error("Error updating TransactionVariableFields:", error);
-  });
+
 export const TransactionPlannedFields: FormField[] = generateFormFields([
   {
     name: "date_valid_from",
@@ -117,32 +102,3 @@ export const TransactionPlannedFields: FormField[] = generateFormFields([
     placeholder: "",
   },
 ]);
-await updateFieldOptions(
-  TransactionPlannedFields,
-  "cashflow/transaction-payment-term-list",
-  "payment_term",
-  "id",
-  "payment_term_name_dutch"
-)
-  .then((updatedFields) => {
-    // Optionally, you can use the updatedFields here if needed
-    console.log("Updated TransactionPlannedFields:", updatedFields);
-  })
-  .catch((error) => {
-    console.error("Error updating TransactionPlannedFields:", error);
-  });
-
-await updateFieldOptions(
-  TransactionPlannedFields,
-  "cashflow/transaction-category-list",
-  "category",
-  "id",
-  "category_name"
-)
-  .then((updatedFields) => {
-    // Optionally, you can use the updatedFields here if needed
-    console.log("Updated TransactionPlannedFields:", updatedFields);
-  })
-  .catch((error) => {
-    console.error("Error updating TransactionPlannedFields:", error);
-  });

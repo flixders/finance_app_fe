@@ -72,7 +72,6 @@ const SpendingVariableTrend: React.FC<SpendingVariableProps> = ({
       lineColor: "#4A5568", // Chakra UI's
     },
     yAxis: {
-      tickInterval: 150,
       title: {
         text: "",
       },
