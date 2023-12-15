@@ -35,7 +35,6 @@ const GenericChakraForm: React.FC<Props> = ({
     event.preventDefault();
     try {
       await submitFormData(formData, endpoint);
-      console.log("Form submitted successfully!");
       setFormData({});
       onFormRequest();
     } catch (error) {

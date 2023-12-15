@@ -10,6 +10,7 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogoutSuccess }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("jwt");
+    localStorage.removeItem("jwt-refresh");
     onLogoutSuccess();
     navigate("/login");
   };
@@ -22,9 +23,9 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogoutSuccess }) => {
       right="35px"
       colorScheme="red"
       variant="outline"
-      leftIcon={<FiLogOut />} // Add the logout icon to the button
-      zIndex="999" // Set a high z-index value to ensure it's on top
-      _hover={{ cursor: "pointer" }} // Apply hover effect
+      leftIcon={<FiLogOut />}
+      zIndex="999"
+      _hover={{ cursor: "pointer" }}
     >
       Log uit
     </Button>

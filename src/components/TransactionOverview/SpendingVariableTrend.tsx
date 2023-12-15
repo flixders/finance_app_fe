@@ -1,7 +1,7 @@
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { BudgetOverview } from "../../utils/interfaces";
-
+import { chartStyle, hexToRGBA } from "../../utils/highchartConfig";
 interface SpendingVariableProps {
   chartData: BudgetOverview[] | null;
 }
@@ -27,14 +27,14 @@ const SpendingVariableTrend: React.FC<SpendingVariableProps> = ({
   const sortedData: [number, number][] = formattedFilteredData
     .slice()
     .sort((a, b) => a[0] - b[0]);
-
+  const hexColor = "#F56565";
   const options = {
     chart: {
       type: "areaspline",
-      backgroundColor: "#1A202C", // Chakra UI's dark background color
+      backgroundColor: chartStyle,
       style: {
-        fontFamily: '"Roboto", sans-serif', // Chakra UI's font or choose appropriate font
-        color: "#E2E8F0", // Chakra UI's text color for contrast
+        fontFamily: chartStyle.chart.style.fontFamily,
+        color: chartStyle.chart.style.color,
       },
     },
     plotOptions: {
@@ -43,20 +43,20 @@ const SpendingVariableTrend: React.FC<SpendingVariableProps> = ({
         fillColor: {
           linearGradient: [0, 0, 0, 300],
           stops: [
-            [0, "rgba(245, 101, 101, 1)"], // Higher opacity at the start
-            [0.8, "rgba(245, 101, 101, 0.2)"], // Lower opacity in the middle
-            [1, "rgba(245, 101, 101, 0.1)"], // Lower opacity in the middle
+            [0, hexToRGBA(hexColor, 1)],
+            [0.8, hexToRGBA(hexColor, 0.2)],
+            [1, hexToRGBA(hexColor, 0.1)],
           ],
         },
       },
     },
     title: {
       text: " Trend variabele uitgaven",
-      margin: 30,
+      margin: chartStyle.title.margin,
       style: {
-        fontSize: "22px",
-        fontWeight: "100",
-        color: "#E2E8F0", // Chakra UI's text color for titles
+        fontSize: chartStyle.title.style.fontSize,
+        fontWeight: chartStyle.title.style.fontWeight,
+        color: chartStyle.title.style.color,
       },
     },
     xAxis: {
@@ -66,19 +66,19 @@ const SpendingVariableTrend: React.FC<SpendingVariableProps> = ({
       },
       labels: {
         style: {
-          color: "#E2E8F0", // Chakra UI's text color for axis labels
+          color: chartStyle.xAxis.labels.style.color,
         },
       },
-      lineColor: "#4A5568", // Chakra UI's
+      lineColor: chartStyle.xAxis.lineColor,
     },
     yAxis: {
       title: {
         text: "",
       },
-      gridLineColor: "rgba(226, 232, 240, 0.1)",
+      gridLineColor: chartStyle.yAxis.gridLineColor,
       labels: {
         style: {
-          color: "#E2E8F0", // Chakra UI's text color for axis labels
+          color: chartStyle.yAxis.labels.style,
         },
         formatter: function (
           this: Highcharts.AxisLabelsFormatterContextObject
@@ -116,12 +116,12 @@ const SpendingVariableTrend: React.FC<SpendingVariableProps> = ({
       {
         name: "Variabele uitgave",
         data: sortedData,
-        color: "#F56565",
+        color: hexColor,
         marker: {
           enabled: true,
-          fillColor: "white",
-          lineColor: "#F56565",
-          lineWidth: 2,
+          fillColor: chartStyle.series.marker.fillColor,
+          lineColor: hexColor,
+          lineWidth: chartStyle.series.marker.lineWidth,
         },
       },
     ],

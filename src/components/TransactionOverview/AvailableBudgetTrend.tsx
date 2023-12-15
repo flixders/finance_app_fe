@@ -1,6 +1,7 @@
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { BudgetOverview } from "../../utils/interfaces";
+import { chartStyle } from "../../utils/highchartConfig";
 
 interface AvailableBudgetTrendProps {
   chartData: BudgetOverview[] | null;
@@ -27,14 +28,14 @@ const AvailableBudgetTrend: React.FC<AvailableBudgetTrendProps> = ({
   const sortedData: [number, number][] = formattedFilteredData
     .slice()
     .sort((a, b) => a[0] - b[0]);
-
+  const defaultHex = "#38A169";
   const options = {
     chart: {
       type: "areaspline",
-      backgroundColor: "#1A202C", // Chakra UI's dark background color
+      backgroundColor: chartStyle.chart.backgroundColor,
       style: {
-        fontFamily: '"Roboto", sans-serif', // Chakra UI's font or choose appropriate font
-        color: "#E2E8F0", // Chakra UI's text color for contrast
+        fontFamily: chartStyle.chart.style.fontFamily,
+        color: chartStyle.chart.style.color,
       },
     },
     plotOptions: {
@@ -52,12 +53,11 @@ const AvailableBudgetTrend: React.FC<AvailableBudgetTrendProps> = ({
     },
     title: {
       text: " Trend overgebleven budget",
-      margin: 30,
+      margin: chartStyle.title.margin,
       style: {
-        fontSize: "22px",
-        fontWeight: "100",
-        marginBottom: "40px",
-        color: "#E2E8F0", // Chakra UI's text color for titles
+        fontSize: chartStyle.title.style.fontSize,
+        fontWeight: chartStyle.title.style.fontWeight,
+        color: chartStyle.title.style.color,
       },
     },
     xAxis: {
@@ -67,19 +67,19 @@ const AvailableBudgetTrend: React.FC<AvailableBudgetTrendProps> = ({
       },
       labels: {
         style: {
-          color: "#E2E8F0", // Chakra UI's text color for axis labels
+          color: chartStyle.xAxis.labels.style.color,
         },
       },
-      lineColor: "#4A5568", // Chakra UI's
+      lineColor: chartStyle.xAxis.lineColor,
     },
     yAxis: {
       title: {
         text: "",
       },
-      gridLineColor: "rgba(226, 232, 240, 0.1)",
+      gridLineColor: chartStyle.yAxis.gridLineColor,
       labels: {
         style: {
-          color: "#E2E8F0", // Chakra UI's text color for axis labels
+          color: chartStyle.yAxis.labels.style.color,
         },
         formatter: function (
           this: Highcharts.AxisLabelsFormatterContextObject
@@ -117,12 +117,12 @@ const AvailableBudgetTrend: React.FC<AvailableBudgetTrendProps> = ({
       {
         name: "Overgebleven budget",
         data: sortedData,
-        color: "#38A169",
+        color: defaultHex,
         marker: {
           enabled: true,
-          fillColor: "white",
-          lineColor: "#38A169",
-          lineWidth: 2,
+          fillColor: chartStyle.series.marker.fillColor,
+          lineColor: defaultHex,
+          lineWidth: chartStyle.series.marker.fillColor,
         },
       },
     ],

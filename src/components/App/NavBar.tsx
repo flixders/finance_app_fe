@@ -20,7 +20,7 @@ function Navbar() {
           }}
           _activeLink={activeLinkStyles}
           className="nav-link"
-          color="black.600" // Grey color
+          color="black.600"
           mr={4}
         >
           Registratie
@@ -34,7 +34,7 @@ function Navbar() {
           }}
           _activeLink={activeLinkStyles}
           className="nav-link"
-          color="black.600" // Grey color
+          color="black.600"
         >
           Overzicht
         </Link>

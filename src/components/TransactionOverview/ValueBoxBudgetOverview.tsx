@@ -1,4 +1,4 @@
-import { Flex, Skeleton } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import {
   FaPiggyBank,
   FaShoppingCart,
@@ -45,7 +45,7 @@ const ValueBoxBudgetOverview: React.FC<ValueBoxBudgetOverviewProps> = ({
                 maximumFractionDigits: 0,
               })}`}
               title={expense.transaction_type_title}
-              icon={IconComponent} // Use the dynamically selected icon component
+              icon={IconComponent}
             />
           );
         })

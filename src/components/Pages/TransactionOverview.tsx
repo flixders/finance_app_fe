@@ -13,12 +13,14 @@ const TransactionOverview = () => {
   const today = new Date();
   const currentDay = today.getDay();
 
-  // Calculate the last Monday
   const lastMonday = new Date(today);
   lastMonday.setDate(today.getDate() - ((currentDay + 6) % 7));
   const [startDate, setStartDate] = useState<Date>(lastMonday);
 
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  const nextSunday = new Date(startDate);
+  nextSunday.setDate(startDate.getDate() + 6);
+  const [endDate, setEndDate] = useState<Date | null>(nextSunday);
+
   const [chartData, setChartData] = useState<BudgetOverview[] | null>(null);
 
   const fetchChartData = async (endpoint: string, start: Date, end: Date) => {
@@ -47,11 +49,7 @@ const TransactionOverview = () => {
     }
   };
 
-  useEffect(() => {
-    const nextSunday = new Date(startDate);
-    nextSunday.setDate(startDate.getDate() + 6);
-    setEndDate(nextSunday);
-  }, [startDate]);
+  useEffect(() => {}, [startDate]);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   useEffect(() => {
@@ -79,7 +77,7 @@ const TransactionOverview = () => {
           <Flex gap={5} marginTop={5}>
             {[...Array(5)].map((_, index) => (
               <Skeleton
-                key={index}
+                key={index} // Add a unique key for each Skeleton component
                 height="120px"
                 width="18%"
                 borderRadius="20px"

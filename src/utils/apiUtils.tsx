@@ -1,5 +1,57 @@
 import { FormField } from "../utils/formFields";
 const API_BASE_URL = "http://127.0.0.1:8000/";
+const jwt_endpoint = "auth/jwt/refresh/";
+let refreshTokenPromise: Promise<void> | null = null;
+let lastTokenRefreshTime: number = 0;
+const TOKEN_REFRESH_THRESHOLD = 180000;
+
+export const refreshJwtToken = async (): Promise<void> => {
+  const refreshToken = localStorage.getItem("jwt-refresh");
+  const currentTime = Date.now();
+
+  if (
+    !refreshToken ||
+    currentTime - lastTokenRefreshTime < TOKEN_REFRESH_THRESHOLD
+  ) {
+    return;
+  }
+
+  if (refreshTokenPromise) {
+    return refreshTokenPromise; // Wait for the ongoing refresh to complete
+  }
+
+  refreshTokenPromise = new Promise(async (resolve, reject) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}${jwt_endpoint}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          refresh: refreshToken,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Token refresh failed");
+      }
+
+      const data = await response.json();
+      const newAccessToken = data.access;
+      localStorage.setItem("jwt", newAccessToken);
+
+      lastTokenRefreshTime = currentTime; // Update the last refresh time
+      resolve();
+    } catch (error) {
+      console.error("Token refresh error:", error);
+      reject(error);
+    } finally {
+      refreshTokenPromise = null;
+    }
+  });
+
+  return refreshTokenPromise;
+};
 
 export async function fetchData(
   endpoint: string,
@@ -10,7 +62,6 @@ export async function fetchData(
   if (startDate && endDate) {
     endpoint += `/${startDate}/${endDate}`;
   }
-  //add endpoint names
   if (endDate && interval) {
     endpoint += `/${endDate}/${interval}`;
   }
@@ -25,13 +76,22 @@ export async function fetchData(
       },
     });
 
-    if (!response.ok) {
-      throw new Error("Network response was not ok.");
+    if (response.status === 401) {
+      await refreshJwtToken();
+      const newToken = localStorage.getItem("jwt");
+      const refreshedResponse = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `JWT ${newToken}`,
+        },
+      });
+      const refreshedData = await refreshedResponse.json();
+      return refreshedData;
+    } else {
+      const data = await response.json();
+      return data;
     }
-
-    const data = await response.json();
-    console.log("Data retrieved:", data);
-    return data;
   } catch (error) {
     console.error("There was an error fetching data:", error);
     return null;
@@ -71,24 +131,37 @@ export const submitFormData = async (
       body: JSON.stringify(formData),
     });
 
+    if (response.status === 401) {
+      await refreshJwtToken();
+      const newToken = localStorage.getItem("jwt");
+      const refreshedResponse = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `JWT ${newToken}`,
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await refreshedResponse.json();
+      return data;
+    }
+
     if (!response.ok) {
       throw new Error("Network response was not ok.");
     }
+
     const data = await response.json();
-    console.log("Data received from API:", data);
     return data;
   } catch (error) {
     console.error("There was an error:", error);
     throw error;
   }
 };
-
 export const deleteRecord = async (
   recordId: number,
   endpoint: string
 ): Promise<any> => {
-  const url = `${API_BASE_URL}/${endpoint}/${recordId}`; // Assuming endpoint includes the resource path
-
+  const url = `${API_BASE_URL}/${endpoint}/${recordId}`;
   const token = localStorage.getItem("jwt");
 
   try {
@@ -100,16 +173,29 @@ export const deleteRecord = async (
       },
     });
 
+    if (response.status === 401) {
+      await refreshJwtToken();
+      const newToken = localStorage.getItem("jwt");
+      const refreshedResponse = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `JWT ${newToken}`,
+        },
+      });
+
+      if (!refreshedResponse.ok) {
+        throw new Error("Network response was not ok.");
+      }
+    }
+
     if (!response.ok) {
       throw new Error("Network response was not ok.");
     }
-    console.log("Record deleted from database");
   } catch (error) {
-    console.error("There was an error:", error);
     throw error;
   }
 };
-
 interface Identifier {
   id: string;
   label: string;
@@ -163,8 +249,9 @@ export const loginUser = async (
 
     if (response.ok) {
       const data = await response.json();
-      const jwt = data.access;
-      localStorage.setItem("jwt", jwt);
+      localStorage.setItem("jwt", data.access);
+      localStorage.setItem("jwt-refresh", data.refresh);
+
       return { success: true };
     } else {
       return {
@@ -207,30 +294,14 @@ export const registerUser = async (
         last_name: lastName,
       }),
     });
-    console.log(
-      JSON.stringify({
-        username,
-        password,
-        email,
-        first_name: firstName,
-        last_name: lastName,
-      })
-    );
 
     if (response.ok) {
-      const data = await response.json();
-      console.log(data);
       return { success: true };
     } else {
-      const data = await response.json();
-      if (data && data.detail) {
-        return { success: false, error: data.detail };
-      } else {
-        return {
-          success: false,
-          error: "Registration failed. Please try again.",
-        };
-      }
+      return {
+        success: false,
+        error: "Registration failed. Please try again.",
+      };
     }
   } catch (error) {
     return {

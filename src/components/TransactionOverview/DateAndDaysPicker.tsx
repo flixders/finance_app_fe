@@ -23,7 +23,6 @@ const DateAndDaysPicker: React.FC<DateAndDaysPickerProps> = ({
   const handleEndDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const dateValue = e.target.value;
     const newEndDate = new Date(dateValue);
-    console.log(newEndDate);
     setSelectedEndDate(newEndDate);
   };
 

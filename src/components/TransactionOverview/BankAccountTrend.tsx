@@ -2,6 +2,7 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import React, { useState, useEffect } from "react";
 import { fetchData } from "../../utils/apiUtils";
+import { chartStyle } from "../../utils/highchartConfig";
 
 interface SpendingOverview {
   date: string;
@@ -30,7 +31,7 @@ const ChartComponent: React.FC = () => {
   const formattedData: [number, number][] = chartData
     ? chartData.map((item) => {
         const [year, month, day] = item.date.split("-").map(Number);
-        const timestamp = Date.UTC(year, month - 1, day); // month is zero-based in JavaScript
+        const timestamp = Date.UTC(year, month - 1, day);
         return [timestamp, item.account_balance];
       })
     : [];
@@ -40,26 +41,24 @@ const ChartComponent: React.FC = () => {
   const options = {
     chart: {
       type: "spline",
-      backgroundColor: "#1A202C", // Chakra UI's dark background color
+      backgroundColor: chartStyle.chart.backgroundColor,
       style: {
-        fontFamily: '"Roboto", sans-serif', // Chakra UI's font or choose appropriate font
-        color: "#E2E8F0", // Chakra UI's text color for contrast
+        fontFamily: chartStyle.chart.style.fontFamily,
+        color: chartStyle.chart.style.color,
       },
     },
     plotOptions: {
       spline: {
-        lineWidth: 3, // Adjust the line width for the line series
+        lineWidth: 3,
       },
-      // Other plot options for different series types if needed...
     },
     title: {
       text: "Ontwikkeling vermogen",
-      margin: 30,
+      margin: chartStyle.title.margin,
       style: {
-        fontSize: "22px",
-        fontWeight: "100",
-        margin: 20,
-        color: "#E2E8F0", // Chakra UI's text color for titles
+        fontSize: chartStyle.title.style.fontSize,
+        fontWeight: chartStyle.title.style.fontWeight,
+        color: chartStyle.title.style.color,
       },
     },
     xAxis: {
@@ -69,19 +68,19 @@ const ChartComponent: React.FC = () => {
       },
       labels: {
         style: {
-          color: "#E2E8F0", // Chakra UI's text color for axis labels
+          color: chartStyle.xAxis.labels.style.color,
         },
       },
-      lineColor: "#4A5568", // Chakra UI's
+      lineColor: chartStyle.xAxis.lineColor,
     },
     yAxis: {
       title: {
         text: "",
       },
-      gridLineColor: "rgba(226, 232, 240, 0.1)",
+      gridLineColor: chartStyle.yAxis.gridLineColor,
       labels: {
         style: {
-          color: "#E2E8F0", // Chakra UI's text color for axis labels
+          color: chartStyle.xAxis.labels.style.color,
         },
         formatter: function (
           this: Highcharts.AxisLabelsFormatterContextObject
@@ -119,13 +118,13 @@ const ChartComponent: React.FC = () => {
       {
         name: "Vermogen",
         data: sortedData,
-        color: "#38A169", // Chakra blue.300 for line color
+        color: "#38A169",
         marker: {
-          enabled: true, // Show markers for all data points
-          fillColor: "white", // Marker fill color
-          lineColor: "#38A169", // Chakra blue.300 for marker outline color
-          lineWidth: 2, // Adjust the marker outline width if needed
-          radius: 5, // Adjust the marker size
+          enabled: true,
+          fillColor: chartStyle.series.marker.fillColor,
+          lineColor: "#38A169",
+          lineWidth: chartStyle.series.marker.lineWidth,
+          radius: 5,
         },
       },
     ],

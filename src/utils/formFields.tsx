@@ -89,7 +89,7 @@ export const TransactionPlannedFields: FormField[] = generateFormFields([
   },
   {
     name: "category",
-    inputType: "select", // Changing the inputType to 'select' for the category field
+    inputType: "select",
     label: "Categorie",
     placeholder: "Selecteer een categorie",
     selectOptions: [],

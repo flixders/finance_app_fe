@@ -8,16 +8,16 @@ import {
   Tr,
   Button,
   HStack,
-  Skeleton,
 } from "@chakra-ui/react";
 import { IoCloseOutline } from "react-icons/io5";
 import { deleteRecord } from "../../utils/apiUtils";
+
 interface Props {
   data: { [key: string]: any }[];
   columnTranslations: { [key: string]: string };
   endpoint: string;
   onFormRequest: () => void;
-  euroColumn: string; // New prop to indicate the column to be formatted as euros
+  euroColumn: string;
 }
 
 const ChakraTable: React.FC<Props> = ({
@@ -27,14 +27,9 @@ const ChakraTable: React.FC<Props> = ({
   endpoint,
   euroColumn,
 }) => {
-  console.log(data);
-  if (data.length === 0) {
-    return;
-  }
-
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(8);
-  const maxButtonsToShow = 4; // Maximum number of page buttons to display
+  const maxButtonsToShow = 4;
   const totalRows = data.length;
   const totalPages = Math.ceil(totalRows / rowsPerPage);
 
@@ -67,16 +62,16 @@ const ChakraTable: React.FC<Props> = ({
 
   let displayPages = [];
   if (totalPages <= maxButtonsToShow) {
-    displayPages = pageNumbers; // Show all pages if there are fewer pages than maxButtonsToShow
+    displayPages = pageNumbers;
   } else if (currentPage <= Math.floor(maxButtonsToShow / 2)) {
-    displayPages = pageNumbers.slice(0, maxButtonsToShow); // Show initial pages
+    displayPages = pageNumbers.slice(0, maxButtonsToShow);
   } else if (currentPage >= totalPages - Math.floor(maxButtonsToShow / 2)) {
-    displayPages = pageNumbers.slice(totalPages - maxButtonsToShow); // Show last pages
+    displayPages = pageNumbers.slice(totalPages - maxButtonsToShow);
   } else {
     displayPages = pageNumbers.slice(
       currentPage - Math.floor(maxButtonsToShow / 2) - 1,
       currentPage + Math.floor(maxButtonsToShow / 2)
-    ); // Show pages around the current page
+    );
   }
 
   const columnsToShow = Object.keys(columnTranslations);
@@ -85,13 +80,13 @@ const ChakraTable: React.FC<Props> = ({
     const numericValue = Number(value);
 
     if (Number.isNaN(numericValue)) {
-      return ""; // Return empty string for invalid values
+      return "";
     }
 
     const formattedValue = new Intl.NumberFormat("nl-NL", {
       style: "currency",
       currency: "EUR",
-      minimumFractionDigits: numericValue % 1 === 0 ? 0 : 2, // Check if value has decimals
+      minimumFractionDigits: numericValue % 1 === 0 ? 0 : 2,
     }).format(numericValue);
 
     return formattedValue;
@@ -121,14 +116,14 @@ const ChakraTable: React.FC<Props> = ({
                   <Td
                     key={colIndex}
                     style={{
-                      maxWidth: "15ch", // Limiting to 10 characters
+                      maxWidth: "15ch",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       whiteSpace: "nowrap",
                     }}
                   >
                     {column === euroColumn
-                      ? formatAsEuros(row[column]) // Apply euro formatting
+                      ? formatAsEuros(row[column])
                       : row[column]}
                   </Td>
                 ))}

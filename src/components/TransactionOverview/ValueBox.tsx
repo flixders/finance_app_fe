@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 interface ValueBoxProps {
   title: string;
   value: ReactNode;
-  icon?: React.ElementType; // Change the type to React.ElementType
+  icon?: React.ElementType;
   iconColor?: string;
 }
 
@@ -31,7 +31,7 @@ const ValueBox: React.FC<ValueBoxProps> = ({
           </Text>
         </Box>
         {IconComponent && (
-          <Icon as={IconComponent} ml="2" fontSize="4xl" color={iconColor} /> // Use 'as' prop with IconComponent
+          <Icon as={IconComponent} ml="2" fontSize="4xl" color={iconColor} />
         )}
       </Flex>
     </Box>

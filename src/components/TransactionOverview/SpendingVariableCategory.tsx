@@ -2,6 +2,7 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import React, { useState, useEffect } from "react";
 import { fetchData } from "../../utils/apiUtils";
+import { chartStyle } from "../../utils/highchartConfig";
 
 interface ChartComponentProps {
   startDate?: Date | null;
@@ -46,19 +47,19 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
   const options: Highcharts.Options = {
     chart: {
       type: "column",
-      backgroundColor: "#1A202C", // Chakra UI's dark background color
+      backgroundColor: chartStyle.chart.backgroundColor,
       style: {
-        fontFamily: '"Roboto", sans-serif', // Chakra UI's font or choose appropriate font
-        color: "#E2E8F0", // Chakra UI's text color for contrast
+        fontFamily: chartStyle.chart.style.fontFamily,
+        color: chartStyle.chart.style.color,
       },
     },
     title: {
       text: "Variabele transacties per categorie",
-      margin: 30,
+      margin: chartStyle.title.margin,
       style: {
-        fontWeight: "100",
-        fontSize: "22px",
-        color: "#E2E8F0", // Chakra UI's text color for titles
+        fontSize: chartStyle.title.style.fontSize,
+        fontWeight: chartStyle.title.style.fontWeight,
+        color: chartStyle.title.style.color,
       },
     },
     xAxis: {
@@ -68,19 +69,19 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
       },
       labels: {
         style: {
-          color: "#E2E8F0", // Chakra UI's text color for axis labels
+          color: chartStyle.title.style.color,
         },
       },
-      lineColor: "#4A5568", // Chakra UI's
+      lineColor: chartStyle.xAxis.lineColor,
     },
     yAxis: {
-      gridLineColor: "rgba(226, 232, 240, 0.1)",
+      gridLineColor: chartStyle.yAxis.gridLineColor,
       title: {
         text: "",
       },
       labels: {
         style: {
-          color: "#E2E8F0", // Chakra UI's text color for axis labels
+          color: chartStyle.yAxis.labels.style.color,
         },
         formatter: function () {
           const numericValue = Number(this.value);
@@ -124,7 +125,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
           : [],
         dataLabels: {
           style: {
-            fontSize: "16px", // Adjust the font size as needed
+            fontSize: "16px",
           },
           enabled: true,
           formatter: function () {

@@ -56,12 +56,8 @@ const RegistrationPage: React.FC<{ isLoggedIn: boolean }> = ({
       "id",
       "category_name"
     )
-      .then((updatedFields) => {
-        console.log("Updated TransactionPlannedFields:", updatedFields);
-      })
-      .catch((error) => {
-        console.error("Error updating TransactionPlannedFields:", error);
-      });
+      .then(() => {})
+      .catch(() => {});
     updateFieldOptions(
       TransactionPlannedFields,
       "cashflow/transaction-payment-term-list",
@@ -69,12 +65,8 @@ const RegistrationPage: React.FC<{ isLoggedIn: boolean }> = ({
       "id",
       "payment_term_name_dutch"
     )
-      .then((updatedFields) => {
-        console.log("Updated TransactionPlannedFields:", updatedFields);
-      })
-      .catch((error) => {
-        console.error("Error updating TransactionPlannedFields:", error);
-      });
+      .then(() => {})
+      .catch(() => {});
   }, [isLoggedIn]);
 
   // VARIABELE LASTEN
@@ -98,10 +90,8 @@ const RegistrationPage: React.FC<{ isLoggedIn: boolean }> = ({
       "id",
       "category_name"
     )
-      .then((updatedFields) => {
-        console.log("Updated TransactionVariableFields:", updatedFields);
-      })
-      .catch((error) => {
+      .then(() => {})
+      .catch(() => {
         console.error("Error updating TransactionVariableFields:", error);
       });
   }, [isLoggedIn]);
@@ -131,7 +121,6 @@ const RegistrationPage: React.FC<{ isLoggedIn: boolean }> = ({
                   onFormRequest={handlesetransactionsVariableDataFormRequest}
                 />
               </Box>
-              {/* Second column */}
               <Box
                 border="1px solid #ccc"
                 borderRadius="15px"
@@ -199,7 +188,6 @@ const RegistrationPage: React.FC<{ isLoggedIn: boolean }> = ({
                   onFormRequest={handlesetransactionsPlannedDataFormRequest}
                 />
               </Box>
-              {/* Second column */}
               <Box border="1px solid #ccc" borderRadius="15px" padding="20px">
                 <ChakraTable
                   data={transactionsPlannedData}
