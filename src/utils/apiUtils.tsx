@@ -1,5 +1,5 @@
 import { FormField } from "../utils/formFields";
-const API_BASE_URL = "http://127.0.0.1:8000/";
+const API_BASE_URL = "https://finance-app2-7c8c5a43727c.herokuapp.com";
 const jwt_endpoint = "auth/jwt/refresh/";
 let refreshTokenPromise: Promise<void> | null = null;
 let lastTokenRefreshTime: number = 0;

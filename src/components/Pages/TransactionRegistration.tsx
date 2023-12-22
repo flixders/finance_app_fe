@@ -91,9 +91,7 @@ const RegistrationPage: React.FC<{ isLoggedIn: boolean }> = ({
       "category_name"
     )
       .then(() => {})
-      .catch(() => {
-        console.error("Error updating TransactionVariableFields:", error);
-      });
+      .catch(() => {});
   }, [isLoggedIn]);
 
   return (
