@@ -41,7 +41,7 @@ function App() {
         ) : (
           <Routes>
             <Route
-              path="/login"
+              path="/"
               element={<LoginPage onLoginSuccess={handleLoginSuccess} />}
             />
           </Routes>
